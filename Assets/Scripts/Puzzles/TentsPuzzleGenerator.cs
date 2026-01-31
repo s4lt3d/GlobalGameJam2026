@@ -61,7 +61,7 @@ namespace Puzzles
         public GameObject SelectedTotem;
 
         EventManager eventManager;
-
+        
 
         private void Start()
         {
@@ -101,6 +101,12 @@ namespace Puzzles
                     Debug.Log("Selected object is not a tent totem.");
                 }
             }
+        }
+
+        public bool IsValidMovePosition(Vector2Int gridLocation)
+        {
+            if(tentState[gridLocation.x, gridLocation.y].Type == CellType.Empty || tentState[gridLocation.x, gridLocation.y].Type == CellType.Tree)
+                return false;
         }
         
 
