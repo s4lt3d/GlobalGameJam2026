@@ -1207,6 +1207,7 @@ GameObject:
   - component: {fileID: 686208951064093388}
   - component: {fileID: 5438465829751406913}
   - component: {fileID: 8611047727358390700}
+  - component: {fileID: 8611047727358390701}
   m_Layer: 0
   m_Name: Selector
   m_TagString: Untagged
@@ -1314,12 +1315,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3407718760657711549}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65545f1c1c6661a4ba2eaa8078d397aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveCellToGridSelection
-  gridController: {fileID: 0}
+  gridController: {fileID: 8221296758657375343}
+--- !u!114 &8611047727358390701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3407718760657711549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb70e428277d045dcb8271a2fa688dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControllerMoveSelect
+  gridController: {fileID: 8221296758657375343}
+  objectTag: MasqueradeFucker
+  stickDeadzone: 0.5
+  overlapRadius: 0.4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
