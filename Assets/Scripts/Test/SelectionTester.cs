@@ -10,7 +10,7 @@ public class SelectionTester : MonoBehaviour
     void Start()
     {
         eventManager = Services.Get<EventManager>();
-        eventManager.gameObjectSelected += (Transform selected) =>
+        eventManager.GameObjectSelected += (Transform selected) =>
         {
             Debug.Log($"Selected object: {selected.name}");
         };

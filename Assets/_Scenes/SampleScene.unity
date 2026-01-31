@@ -1363,11 +1363,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Utilities.MouseNearestTaggedSelect
   objectTag: Totem
-  maxDistance: 500
-  maxScreenDistance: 1
-  raycastMask:
-    serializedVersion: 2
-    m_Bits: 8
+  groundTag: Ground
+  maxRayDistance: 500
+  maxDistanceToHit: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
