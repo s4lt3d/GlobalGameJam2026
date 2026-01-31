@@ -18,15 +18,7 @@ namespace Core
         [Min(0f)]
         private float cellPadding = 0f;
 
-        [SerializeField]
-        private GameObject cell;
         
-        private int[,] cells;
-
-        private Vector2Int currentGridPosition = Vector2Int.zero;
-
-        private bool canMoveGrid = true;
-
         private bool IsInBounds(Vector2Int gridPosition)
         {
             if (gridPosition.x < 0 || gridPosition.x >= gridSize)
@@ -71,22 +63,22 @@ namespace Core
             return position;
         }
 
-        public Vector3 MoveSelectionToGridPosition(Vector2Int gridPosition)
-        {
-            if (!IsInBounds(gridPosition))
-                return Vector3.zero;
-
-            if (!CanMoveGrid())
-                return Vector3.zero;
-
-            currentGridPosition = gridPosition;
-
-            var position = GetGridLocation(gridPosition);
-            if (cell != null)
-                cell.transform.position = position;
-
-            return position;
-        }
+        // public Vector3 MoveSelectionToGridPosition(Vector2Int gridPosition)
+        // {
+        //     if (!IsInBounds(gridPosition))
+        //         return Vector3.zero;
+        //
+        //     if (!CanMoveGrid())
+        //         return Vector3.zero;
+        //
+        //     currentGridPosition = gridPosition;
+        //
+        //     var position = GetGridLocation(gridPosition);
+        //     if (cell != null)
+        //         cell.transform.position = position;
+        //
+        //     return position;
+        // }
 
         public Vector3 GetWorldPosition(Vector2Int gridPosition)
         {
@@ -130,18 +122,18 @@ namespace Core
             Debug.Log("Editor causes this OnValidate");
         }
 
-        private bool CanMoveGrid()
-        {
-            return canMoveGrid;
-        }
+        // private bool CanMoveGrid()
+        // {
+        //     return canMoveGrid;
+        // }
 
-        private void OnGridMoved(Vector2Int gridChange)
-        {
-            if (!CanMoveGrid())
-                return;
-
-            currentGridPosition.x = Mathf.Clamp(currentGridPosition.x + gridChange.x, 0, gridSize - 1);
-            currentGridPosition.y = Mathf.Clamp(currentGridPosition.y + gridChange.y, 0, gridSize - 1);
-        }
+        // private void OnGridMoved(Vector2Int gridChange)
+        // {
+        //     if (!CanMoveGrid())
+        //         return;
+        //
+        //     currentGridPosition.x = Mathf.Clamp(currentGridPosition.x + gridChange.x, 0, gridSize - 1);
+        //     currentGridPosition.y = Mathf.Clamp(currentGridPosition.y + gridChange.y, 0, gridSize - 1);
+        // }
     }
 }

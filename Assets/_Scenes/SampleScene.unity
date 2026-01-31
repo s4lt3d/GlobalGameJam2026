@@ -1131,9 +1131,17 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 327956773}
+    - target: {fileID: 6361287650073727448, guid: 0d0b5239f8af5416dbf1d2b342a1bfce, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6361287650073727448, guid: 0d0b5239f8af5416dbf1d2b342a1bfce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8536812550967600994, guid: 0d0b5239f8af5416dbf1d2b342a1bfce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.97
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8536812550967600994, guid: 0d0b5239f8af5416dbf1d2b342a1bfce, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1141,7 +1149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536812550967600994, guid: 0d0b5239f8af5416dbf1d2b342a1bfce, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.9
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8536812550967600994, guid: 0d0b5239f8af5416dbf1d2b342a1bfce, type: 3}
       propertyPath: m_LocalRotation.w
