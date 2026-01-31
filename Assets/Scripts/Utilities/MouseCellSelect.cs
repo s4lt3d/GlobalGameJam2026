@@ -13,14 +13,13 @@ public class MouseCellSelect : MonoBehaviour
     private GridController gridController;
 
     [SerializeField] private GameObject thingToSpawn;
-
-    [SerializeField]
-    private float nearestDistanceToCursor;
-
-    [SerializeField]
-    private string objectTag = "MasqueradeFucker";
     
     private EventManager eventManager;
+
+    private void Awake()
+    {
+        eventManager = Services.Get<EventManager>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -48,20 +47,11 @@ public class MouseCellSelect : MonoBehaviour
                         break;
                     
                     var isInGrid = gridController.TryGetGridPositionFromWorld(hit.point,  out var gridLocation);
-
+                    
                     if (isInGrid)
                         eventManager.GridSelected?.Invoke(gridLocation);
                     Debug.Log(isInGrid ? $"Mouse hit: {gridLocation}" : $"not in grid: {gridLocation}");
                 }
-                else if (hit.collider != null && hit.collider.CompareTag(objectTag))
-                {
-                    if (gridController == null)
-                        break;
-
-                    var thing = hit.collider.gameObject.transform;
-                    eventManager.gameObjectSelected?.Invoke(thing);
-                }
-                
             }
         }
         

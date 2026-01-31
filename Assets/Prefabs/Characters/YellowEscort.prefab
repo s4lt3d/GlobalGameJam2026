@@ -445,7 +445,7 @@ GameObject:
   - component: {fileID: 9070208019216000057}
   m_Layer: 0
   m_Name: YellowEscort
-  m_TagString: Untagged
+  m_TagString: Totem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
