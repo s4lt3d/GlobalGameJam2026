@@ -1759,7 +1759,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d40e160ca445d8bd7eefc74414406b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.GridController
-  gridSize: 15
+  gridSize: 5
   quadHeight: 0.15
   cellPadding: 1
   cell: {fileID: 1052206711}
@@ -1776,9 +1776,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzles.TentsPuzzleGenerator
   spawnPoint: {fileID: 327956773}
-  spawnSpacing: {x: 0, y: 0, z: 0}
-  gridSize: 15
-  pairCount: 50
+  spawnSpacing: {x: 1.5, y: 0, z: 0}
+  gridSize: 5
+  pairCount: 5
   numColors: 4
   seed: -1
   maxAttempts: 3000
