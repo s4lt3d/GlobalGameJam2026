@@ -12,6 +12,7 @@ namespace Managers
         public Action<Vector2Int> GridSelected;
         public Action<Transform> gameObjectSelected;
         
+        
         public void InitializeService()
         {
         }

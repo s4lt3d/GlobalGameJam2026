@@ -430,8 +430,8 @@ namespace Puzzles
 
                     GameObject instance = Instantiate(treePrefab, gridController.GetWorldCenter(pos), Quaternion.identity);
                     var agent = instance.GetComponent<AIAgent>();
-                    if (agent != null)
-                        agent.SetDestination(gridController.GetWorldCenter(pos));
+                    // if (agent != null)
+                    //     agent.SetDestination(gridController.GetWorldCenter(pos));
                 }
             }
         }
@@ -510,7 +510,7 @@ namespace Puzzles
                 }
 
                 Vector3 targetPos = gridController.GetWorldCenter(gridPos);
-                agent.SetDestination(targetPos);
+                // agent.SetDestination(targetPos);
                 index++;
             }
         }
