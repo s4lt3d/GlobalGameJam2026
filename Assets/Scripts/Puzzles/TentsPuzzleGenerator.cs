@@ -67,9 +67,41 @@ namespace Puzzles
         {
             rng = (seed >= 0) ? new System.Random(seed) : new System.Random();
             eventManager = Services.Get<EventManager>();
-            eventManager.GameObjectSelected += (Transform selected) => { SelectedTotem = selected.gameObject; };
+            eventManager.GameObjectSelected += OnGameObjectSelected;
+            eventManager.GridSelected += OnGridSelected;
             GenerateAndLog();
         }
+
+        private void OnGridSelected(Vector2Int gridLocation)
+        {
+            if (SelectedTotem != null)
+            {
+                Debug.Log($"Selected totem: {SelectedTotem.name} to move to {gridLocation}");
+                var loc = gridController.GetGridLocation(gridLocation);
+                SelectedTotem.GetComponent<AIAgent>().SetDestination(loc);
+            }
+        }
+
+        private void OnGameObjectSelected(Transform selected)
+        {
+            if (SelectedTotem != null)
+                return;
+            
+            var aiagent = selected.GetComponent<AIAgent>();
+            if (aiagent != null)
+            {
+                if (aiagent.Totem == TotemType.tent)
+                {
+                    SelectedTotem = selected.gameObject;
+                    Debug.Log($"Selected tent: {SelectedTotem.name}");
+                }
+                else
+                {
+                    Debug.Log("Selected object is not a tent totem.");
+                }
+            }
+        }
+        
 
         private void GenerateAndLog()
         {

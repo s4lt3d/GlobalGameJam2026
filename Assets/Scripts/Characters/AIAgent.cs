@@ -9,6 +9,11 @@ public class AIAgent : MonoBehaviour
     [SerializeField] private Color gizmoColor = new Color(0.1f, 0.8f, 1f, 1f);
     [SerializeField] private float gizmoRadius = 0.15f;
 
+    [SerializeField]
+    private TotemType totemType = TotemType.tent;
+    
+    public TotemType Totem => totemType;
+
     private UnityEngine.AI.NavMeshAgent agent;
 
     private void Awake()
@@ -55,4 +60,10 @@ public class AIAgent : MonoBehaviour
         Gizmos.DrawSphere(destination, gizmoRadius);
         Gizmos.DrawLine(transform.position, destination);
     }
+}
+
+public enum TotemType
+{
+    tree, 
+    tent
 }
