@@ -5,8 +5,10 @@ using UnityEngine;
 
 namespace Puzzles
 {
-        public class TentsPuzzleGenerator : MonoBehaviour
+    public class TentsPuzzleGenerator : MonoBehaviour
     {
+        public const int EmptyCell = -1;
+
         [SerializeField]
         private GameObject spawnPoint;
 
@@ -22,6 +24,10 @@ namespace Puzzles
         public int maxAttempts = 30000;
 
         private System.Random rng;
+
+        private int[,] tentState;
+        private TestPuzzle currentPuzzle;
+        private TentSolution currentSolution;
         
         [SerializeField]
         GridController gridController;
@@ -97,6 +103,10 @@ namespace Puzzles
                 return;
             }
 
+            currentPuzzle = testPuzzle;
+            currentSolution = tentSolution;
+            InitializeTentState(gridSize);
+
             SpawnPuzzle(testPuzzle);
             StartCoroutine(SpawnTentsAfterDelay(testPuzzle, tentSolution, 2f));
             Debug.Log(RenderSolution(testPuzzle, tentSolution));
@@ -106,6 +116,89 @@ namespace Puzzles
         {
             int k = (n + 1) / 2;
             return k * k;
+        }
+
+        private void InitializeTentState(int size)
+        {
+            tentState = new int[size, size];
+            for (int x = 0; x < size; x++)
+            for (int y = 0; y < size; y++)
+                tentState[x, y] = EmptyCell;
+        }
+
+        public int GetCellState(Vector2Int gridPosition)
+        {
+            if (!IsInBounds(gridPosition))
+                return EmptyCell;
+
+            if (currentPuzzle != null && currentPuzzle.treeColors.TryGetValue(gridPosition, out int treeColor))
+                return treeColor;
+
+            if (tentState == null)
+                return EmptyCell;
+
+            return tentState[gridPosition.x, gridPosition.y];
+        }
+
+        public bool IsCellFree(Vector2Int gridPosition)
+        {
+            if (!IsInBounds(gridPosition))
+                return false;
+
+            if (currentPuzzle != null && currentPuzzle.treeColors.ContainsKey(gridPosition))
+                return false;
+
+            if (tentState == null)
+                return true;
+
+            return tentState[gridPosition.x, gridPosition.y] == EmptyCell;
+        }
+
+        public bool UpdateTentState(Vector2Int gridPosition, int color)
+        {
+            if (!IsInBounds(gridPosition))
+                return false;
+
+            if (currentPuzzle != null && currentPuzzle.treeColors.ContainsKey(gridPosition))
+                return false;
+
+            if (tentState == null)
+                InitializeTentState(gridSize);
+
+            tentState[gridPosition.x, gridPosition.y] = color;
+            return true;
+        }
+
+        public bool IsSolved()
+        {
+            if (currentPuzzle == null || tentState == null)
+                return false;
+
+            var tents = BuildTentDictionaryFromState();
+            return ValidateSolution(currentPuzzle, tents);
+        }
+
+        private Dictionary<Vector2Int, int> BuildTentDictionaryFromState()
+        {
+            var tents = new Dictionary<Vector2Int, int>();
+            for (int x = 0; x < gridSize; x++)
+            for (int y = 0; y < gridSize; y++)
+            {
+                int color = tentState[x, y];
+                if (color != EmptyCell)
+                    tents[new Vector2Int(x, y)] = color;
+            }
+
+            return tents;
+        }
+
+        private bool IsInBounds(Vector2Int gridPosition)
+        {
+            if (gridPosition.x < 0 || gridPosition.x >= gridSize)
+                return false;
+            if (gridPosition.y < 0 || gridPosition.y >= gridSize)
+                return false;
+            return true;
         }
 
         // =======================

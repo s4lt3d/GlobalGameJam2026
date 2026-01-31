@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core
 {
@@ -10,8 +11,8 @@ namespace Core
         private int gridSize = 3;
         public int GridSize => gridSize;
 
-        [SerializeField]
-        private float quadHeight = 0.5f;
+        [FormerlySerializedAs("quadHeight")] [SerializeField]
+        private float spawnHeigh = 0.5f;
 
         [SerializeField]
         [Min(0f)]
@@ -36,21 +37,55 @@ namespace Core
             
             return true;
         }
+        
+        
 
-        private Vector3 GetGridLocationCenter(Vector2Int gridPosition)
-        {
-            return GetWorldPosition(gridPosition, true);
-        }
+        // private Vector3 GetGridLocationCenter(Vector2Int gridPosition)
+        // {
+        //     return new Vector3(gridPosition.x + 0.5f, quadHeight, gridPosition.y + 0.5f);
+        // }
 
-        public bool SpawnInGrid(Vector2Int gridPosition, GameObject cellPrefab)
+        // public Vector3 GetGridPosition(Vector3 worldLocation)
+        // {
+        //     Vector2 gridPosition = new Vector2(worldLocation.x, worldLocation.z);
+        //     
+        //     
+        // }
+
+        public Vector3 GetGridLocation(Vector2Int gridPosition)
         {
             if (!IsInBounds(gridPosition))
-                return false;
+                return -Vector3.one;
+            
+            return GetWorldPosition(gridPosition, true);
+        }
+        
+        public Vector3 SpawnInGrid(Vector2Int gridPosition, GameObject cellPrefab)
+        {
+            if (!IsInBounds(gridPosition))
+                return Vector3.zero;
 
             var position = GetWorldCenter(gridPosition);
             
             var instance = Instantiate(cellPrefab, position, Quaternion.identity);
-            return true;
+            return position;
+        }
+
+        public Vector3 MoveSelectionToGridPosition(Vector2Int gridPosition)
+        {
+            if (!IsInBounds(gridPosition))
+                return Vector3.zero;
+
+            if (!CanMoveGrid())
+                return Vector3.zero;
+
+            currentGridPosition = gridPosition;
+
+            var position = GetGridLocation(gridPosition);
+            if (cell != null)
+                cell.transform.position = position;
+
+            return position;
         }
 
         public Vector3 GetWorldPosition(Vector2Int gridPosition)
@@ -60,7 +95,7 @@ namespace Core
 
         public Vector3 GetWorldCenter(Vector2Int gridPosition)
         {
-            return GetGridLocationCenter(gridPosition);
+            return GetGridLocation(gridPosition);
         }
 
         public bool TryGetGridPositionFromWorld(Vector3 worldPosition, out Vector2Int gridPosition, bool useNearestCenter = true)
@@ -72,8 +107,9 @@ namespace Core
 
             int x = useNearestCenter ? Mathf.RoundToInt(gx - 0.5f) : Mathf.FloorToInt(gx);
             int y = useNearestCenter ? Mathf.RoundToInt(gy - 0.5f) : Mathf.FloorToInt(gy);
-
+            
             gridPosition = new Vector2Int(x, y);
+            // var centerWorldPosition = GetGridLocation(gridPosition);
             return IsInBounds(gridPosition);
         }
 
@@ -81,7 +117,7 @@ namespace Core
         {
             float spacing = 1f + cellPadding;
             float offset = center ? 0.5f * spacing : 0f;
-            float height = center ? quadHeight : 0f;
+            float height = center ? spawnHeigh : 0f;
             Vector3 local = new Vector3(
                 gridPosition.x * spacing + offset,
                 height,
