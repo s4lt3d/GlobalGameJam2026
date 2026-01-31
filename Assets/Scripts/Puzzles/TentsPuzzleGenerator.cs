@@ -48,6 +48,8 @@ namespace Puzzles
         private CellState[,] tentState;
         private TestPuzzle currentPuzzle;
         private TentSolution currentSolution;
+        private readonly Dictionary<GameObject, int> tentInstanceColors = new Dictionary<GameObject, int>();
+        private readonly Dictionary<GameObject, Vector2Int> tentInstancePositions = new Dictionary<GameObject, Vector2Int>();
 
         [SerializeField]
         GridController gridController;
@@ -72,22 +74,77 @@ namespace Puzzles
             GenerateAndLog();
         }
 
+        private bool sameFrame = false;
+
         private void OnGridSelected(Vector2Int gridLocation)
         {
+            if (sameFrame)
+                return;
+            sameFrame = true;   
             if (SelectedTotem != null)
             {
+                if (gridController == null)
+                {
+                    Debug.LogError("GridController is not assigned.");
+                    SelectedTotem = null;
+                    return;
+                }
+
+                if (!IsCellFree(gridLocation))
+                {
+                    Debug.Log($"Grid cell {gridLocation} is not free.");
+                    return;
+                }
+
+                if (!TryGetTentColor(SelectedTotem, out int color))
+                {
+                    Debug.LogWarning($"Selected totem {SelectedTotem.name} has no known color.");
+                    SelectedTotem = null;
+                    return;
+                }
+
+                if (TryGetTentGridPosition(SelectedTotem, out var previousGrid))
+                {
+                    if (previousGrid != gridLocation)
+                        UpdateCellState(previousGrid, CellType.Empty, EmptyCell);
+                }
+
+                if (!UpdateCellState(gridLocation, CellType.Tent, color))
+                {
+                    Debug.LogWarning($"Failed to update grid state for {gridLocation}.");
+                    SelectedTotem = null;
+                    return;
+                }
+
                 Debug.Log($"Selected totem: {SelectedTotem.name} to move to {gridLocation}");
                 var loc = gridController.GetGridLocation(gridLocation);
-                SelectedTotem.GetComponent<AIAgent>().SetDestination(loc);
+                var agent = SelectedTotem.GetComponent<AIAgent>();
+                if (agent != null)
+                    agent.SetDestination(loc);
+                else
+                    Debug.LogWarning($"Selected totem {SelectedTotem.name} has no AIAgent.");
+
+                tentInstancePositions[SelectedTotem] = gridLocation;
                 SelectedTotem = null;
+
+                if (IsSolved())
+                    Debug.Log("You win");
             }
+            
+        }
+
+        void Update()
+        {
+            sameFrame = false;
         }
 
         private void OnGameObjectSelected(Transform selected)
         {
             if (SelectedTotem != null)
                 return;
-            
+            if (sameFrame)
+                return;
+            sameFrame = true;   
             var aiagent = selected.GetComponent<AIAgent>();
             if (aiagent != null)
             {
@@ -106,7 +163,9 @@ namespace Puzzles
         public bool IsValidMovePosition(Vector2Int gridLocation)
         {
             if(tentState[gridLocation.x, gridLocation.y].Type == CellType.Empty || tentState[gridLocation.x, gridLocation.y].Type == CellType.Tree)
-                return false;
+                return true;
+
+            return false;
         }
         
 
@@ -275,6 +334,28 @@ namespace Puzzles
             if (gridPosition.y < 0 || gridPosition.y >= gridSize)
                 return false;
             return true;
+        }
+
+        private bool TryGetTentColor(GameObject tent, out int color)
+        {
+            if (tentInstanceColors.TryGetValue(tent, out color))
+                return true;
+
+            color = EmptyCell;
+            return false;
+        }
+
+        private bool TryGetTentGridPosition(GameObject tent, out Vector2Int gridPosition)
+        {
+            if (tentInstancePositions.TryGetValue(tent, out gridPosition))
+                return true;
+
+            if (gridController != null &&
+                gridController.TryGetGridPositionFromWorld(tent.transform.position, out gridPosition))
+                return true;
+
+            gridPosition = Vector2Int.zero;
+            return false;
         }
 
         // =======================
@@ -555,6 +636,9 @@ namespace Puzzles
                 return;
             }
 
+            tentInstanceColors.Clear();
+            tentInstancePositions.Clear();
+
             int index = 0;
             foreach (var kvp in sol.tents)
             {
@@ -582,9 +666,9 @@ namespace Puzzles
                 if (agent == null)
                 {
                     Debug.LogWarning($"Spawned tent at {gridPos} has no AIAgent.");
-                    index++;
-                    continue;
                 }
+
+                tentInstanceColors[instance] = color;
 
                 index++;
             }
