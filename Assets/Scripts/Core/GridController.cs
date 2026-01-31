@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core
 {
@@ -10,8 +11,8 @@ namespace Core
         private int gridSize = 3;
         public int GridSize => gridSize;
 
-        [SerializeField]
-        private float quadHeight = 0.5f;
+        [FormerlySerializedAs("quadHeight")] [SerializeField]
+        private float spawnHeigh = 0.5f;
 
         [SerializeField]
         [Min(0f)]
@@ -28,34 +29,56 @@ namespace Core
 
         private bool IsInBounds(Vector2Int gridPosition)
         {
-            if (gridPosition.x >= gridSize - 1)
+            if (gridPosition.x >= gridSize)
                 return false;
             
-            if (gridPosition.y >= gridSize - 1)
+            if (gridPosition.y >= gridSize)
                 return false;
             
             return true;
         }
 
-        private Vector3 GetGridLocationCenter(Vector2Int gridPosition)
+        // private Vector3 GetGridLocationCenter(Vector2Int gridPosition)
+        // {
+        //     return new Vector3(gridPosition.x + 0.5f, quadHeight, gridPosition.y + 0.5f);
+        // }
+
+        public Vector3 GetGridLocation(Vector2Int gridPosition)
         {
             float spacing = 1f + cellPadding;
-            return new Vector3(
-                gridPosition.x * spacing + 0.5f * spacing,
-                quadHeight,
-                gridPosition.y * spacing + 0.5f * spacing);
+            return transform.position + new Vector3(
+                gridPosition.x * spacing,
+                spawnHeigh,
+                gridPosition.y * spacing);
         }
-
-        public bool SpawnInGrid(Vector2Int gridPosition, GameObject cellPrefab)
+        
+        public Vector3 SpawnInGrid(Vector2Int gridPosition, GameObject cellPrefab)
         {
             if (!IsInBounds(gridPosition))
-                return false;
+                return Vector3.zero;
 
             float spacing = 1f + cellPadding;
             var position = transform.position + new Vector3(gridPosition.x * spacing, 0, gridPosition.y * spacing);
             
             var instance = Instantiate(cellPrefab, position, Quaternion.identity);
-            return true;
+            return position;
+        }
+
+        public Vector3 MoveSelectionToGridPosition(Vector2Int gridPosition)
+        {
+            if (!IsInBounds(gridPosition))
+                return Vector3.zero;
+
+            if (!CanMoveGrid())
+                return Vector3.zero;
+
+            currentGridPosition = gridPosition;
+
+            var position = GetGridLocation(gridPosition);
+            if (cell != null)
+                cell.transform.position = position;
+
+            return position;
         }
 
         public Vector3 GetWorldPosition(Vector2Int gridPosition)
