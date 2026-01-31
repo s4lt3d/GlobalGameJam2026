@@ -279,6 +279,7 @@ MonoBehaviour:
   drawGizmos: 1
   gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
   gizmoRadius: 0.15
+  totemType: 0
 --- !u!136 &-7004392477130821719
 CapsuleCollider:
   m_ObjectHideFlags: 0
