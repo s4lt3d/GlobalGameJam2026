@@ -79,6 +79,7 @@ namespace Puzzles
                 Debug.Log($"Selected totem: {SelectedTotem.name} to move to {gridLocation}");
                 var loc = gridController.GetGridLocation(gridLocation);
                 SelectedTotem.GetComponent<AIAgent>().SetDestination(loc);
+                SelectedTotem = null;
             }
         }
 
