@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Text;
 using Core;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Puzzles
 {
@@ -17,10 +16,10 @@ namespace Puzzles
         [Header("Config")]
         public int gridSize = 5;
 
-        public int pairCount = 9;
+        public int pairCount = 7;
         public int numColors = 4;
         public int seed = -1; // -1 = random seed
-        public int maxAttempts = 3000;
+        public int maxAttempts = 30000;
 
         private System.Random rng;
         
@@ -44,16 +43,30 @@ namespace Puzzles
             TestPuzzle testPuzzle = null;
             TentSolution tentSolution = null;
             bool validated = false;
+
+            if (gridController != null && gridSize != gridController.GridSize)
+            {
+                Debug.Log($"TentsPuzzleGenerator gridSize overridden by GridController: {gridSize} -> {gridController.GridSize}");
+                gridSize = gridController.GridSize;
+            }
             
             if(tentPrefabs.Count < numColors)
             {
                 Debug.LogError("Not enough tent prefabs for the number of colors specified.");
                 return;
             }
-            
+
              if(treePrefabs.Count < numColors)
             {
                 Debug.LogError("Not enough tree prefabs for the number of colors specified.");
+                return;
+            }
+
+            int maxNonTouchingTents = MaxNonTouchingTents(gridSize);
+            if (pairCount > maxNonTouchingTents)
+            {
+                Debug.LogError($"Pair count {pairCount} is impossible for {gridSize}x{gridSize}. " +
+                               $"Max tents without touching (including diagonals) is {maxNonTouchingTents}.");
                 return;
             }
 
@@ -64,8 +77,11 @@ namespace Puzzles
                 {
                     testPuzzle = new TestPuzzle(gridSize, treeColors);
                     tentSolution = new TentSolution(tents, pairing);
-                    validated = ValidateSolution(testPuzzle, tentSolution.tents);
-                    break;
+                    if (ValidateSolution(testPuzzle, tentSolution.tents))
+                    {
+                        validated = true;
+                        break;
+                    }
                 }
             }
 
@@ -77,12 +93,19 @@ namespace Puzzles
 
             if (!validated)
             {
-                Debug.LogWarning("Generated layout failed validation.");
+                Debug.LogError("Failed to validate a generated layout. Try more colors or fewer pairs.");
+                return;
             }
 
             SpawnPuzzle(testPuzzle);
-            SpawnTents(testPuzzle, tentSolution);
+            StartCoroutine(SpawnTentsAfterDelay(testPuzzle, tentSolution, 2f));
             Debug.Log(RenderSolution(testPuzzle, tentSolution));
+        }
+
+        private int MaxNonTouchingTents(int n)
+        {
+            int k = (n + 1) / 2;
+            return k * k;
         }
 
         // =======================
@@ -153,18 +176,22 @@ namespace Puzzles
                     if (treeColors.ContainsKey(tpos) || tents.ContainsKey(tpos))
                         continue;
 
+                    int treeColor = rng.Next(numColors);
+                    if (SameColorTreeConflict(n, treeColors, tpos, treeColor))
+                        continue;
+
                     var colors = new List<int>();
                     for (int i = 0; i < numColors; i++)
                         colors.Add(i);
                     Shuffle(colors, rng);
 
                     bool placed = false;
-                    foreach (var color in colors)
+                    foreach (var tentColor in colors)
                     {
-                        if (!SameColorTreeConflict(n, treeColors, tpos, color))
+                        if (!TentColorInvalid(treeColors, p, tentColor, n, tpos, treeColor))
                         {
-                            tents[p] = color;
-                            treeColors[tpos] = color;
+                            tents[p] = tentColor;
+                            treeColors[tpos] = treeColor;
                             pairing[tpos] = p;
                             placed = true;
                             break;
@@ -193,14 +220,13 @@ namespace Puzzles
             foreach (var kvp in treeColors)
             {
                 var treePos = kvp.Key;
-                int treeColor = kvp.Value;
 
                 var neighbors = OrthoNeighbors(n, treePos);
                 var matching = new List<Vector2Int>();
 
                 foreach (var p in neighbors)
                 {
-                    if (tents.TryGetValue(p, out int tentColor) && tentColor == treeColor)
+                    if (tents.ContainsKey(p))
                     {
                         matching.Add(p);
                     }
@@ -208,7 +234,7 @@ namespace Puzzles
 
                 if (matching.Count != 1)
                 {
-                    Debug.Log($"Tree at {treePos} invalid tent match");
+                    Debug.Log($"Tree at {treePos} has wrong number of tents");
                     return false;
                 }
 
@@ -258,6 +284,21 @@ namespace Puzzles
                 }
             }
 
+            foreach (var kvp in tents)
+            {
+                var tentPos = kvp.Key;
+                int tentColor = kvp.Value;
+
+                foreach (var q in OrthoNeighbors(n, tentPos))
+                {
+                    if (treeColors.TryGetValue(q, out int treeColor) && treeColor == tentColor)
+                    {
+                        Debug.Log($"Tent at {tentPos} matches adjacent tree color");
+                        return false;
+                    }
+                }
+            }
+
             return true;
         }
 
@@ -294,7 +335,10 @@ namespace Puzzles
                         continue;
                     }
 
-                    gridController.SpawnInGrid(new Vector2Int(r, c), treePrefab);
+                    GameObject instance = Instantiate(treePrefab, gridController.GetWorldCenter(pos), Quaternion.identity);
+                    var agent = instance.GetComponent<AIAgent>();
+                    if (agent != null)
+                        agent.SetDestination(gridController.GetWorldCenter(pos));
                 }
             }
         }
@@ -364,18 +408,24 @@ namespace Puzzles
                 Vector3 startPos = spawnPoint.transform.position + spawnOffset;
                 var instance = Instantiate(tentPrefab, startPos, Quaternion.identity);
 
-                var agent = instance.GetComponent<NavMeshAgent>();
+                var agent = instance.GetComponent<AIAgent>();
                 if (agent == null)
                 {
-                    Debug.LogWarning($"Spawned tent at {gridPos} has no NavMeshAgent.");
+                    Debug.LogWarning($"Spawned tent at {gridPos} has no AIAgent.");
                     index++;
                     continue;
                 }
 
-                Vector3 targetPos = gridController.GetWorldPosition(gridPos);
+                Vector3 targetPos = gridController.GetWorldCenter(gridPos);
                 agent.SetDestination(targetPos);
                 index++;
             }
+        }
+
+        private System.Collections.IEnumerator SpawnTentsAfterDelay(TestPuzzle puz, TentSolution sol, float delaySeconds)
+        {
+            yield return new WaitForSeconds(delaySeconds);
+            SpawnTents(puz, sol);
         }
 
         // =======================
@@ -443,6 +493,30 @@ namespace Puzzles
             foreach (var q in KingNeighbors(n, p))
             {
                 if (treeColors.TryGetValue(q, out int other) && other == color)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool TentColorInvalid(
+            Dictionary<Vector2Int, int> treeColors,
+            Vector2Int tentPos,
+            int tentColor,
+            int n,
+            Vector2Int newTreePos,
+            int newTreeColor)
+        {
+            foreach (var q in OrthoNeighbors(n, tentPos))
+            {
+                if (q == newTreePos)
+                {
+                    if (newTreeColor == tentColor)
+                        return true;
+                    continue;
+                }
+
+                if (treeColors.TryGetValue(q, out int other) && other == tentColor)
                     return true;
             }
 

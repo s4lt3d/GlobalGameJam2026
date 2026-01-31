@@ -271,8 +271,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.37071952, y: 0, z: 0, w: 0.9287449}
-  m_LocalPosition: {x: 3.26, y: 1.98, z: -0.3}
+  m_LocalRotation: {x: -0.5571192, y: -0.014211312, z: 0.009541404, w: -0.8302561}
+  m_LocalPosition: {x: 4.7198358, y: 9.365873, z: -1.2575932}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1035,7 +1035,7 @@ Transform:
   m_GameObject: {fileID: 1052206711}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.99, y: 0.15, z: 0.97}
+  m_LocalPosition: {x: 0, y: 0.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1741,7 +1741,7 @@ Transform:
   m_GameObject: {fileID: 1792652169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.97, y: 0, z: 2.9}
+  m_LocalPosition: {x: 3, y: 0, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1760,8 +1760,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d40e160ca445d8bd7eefc74414406b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.GridController
-  gridSize: 15
-  quadHeight: 0.15
+  gridSize: 5
+  spawnHeigh: 0.15
   cellPadding: 1
   cell: {fileID: 1052206711}
 --- !u!114 &1792652172
@@ -1777,9 +1777,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzles.TentsPuzzleGenerator
   spawnPoint: {fileID: 327956773}
-  spawnSpacing: {x: 0, y: 0, z: 0}
-  gridSize: 15
-  pairCount: 50
+  spawnSpacing: {x: 1.5, y: 0, z: 0}
+  gridSize: 5
+  pairCount: 5
   numColors: 4
   seed: -1
   maxAttempts: 3000
@@ -1794,6 +1794,20 @@ MonoBehaviour:
   - {fileID: 5481997189055709935, guid: e7ee6a93135424a1496ff1b44d3d2ac1, type: 3}
   - {fileID: 4367334027110784046, guid: 4d83c8026333942f29415f189ee74203, type: 3}
   - {fileID: 7951336801938829681, guid: 2aa5b9ba6283b4b10896e80ebd8f3e3e, type: 3}
+--- !u!114 &1792652173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1792652169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb70e428277d045dcb8271a2fa688dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseTest
+  groundTag: Ground
+  gridController: {fileID: 1792652171}
 --- !u!1 &2062408406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,8 +1876,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062408406}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3707195, y: 0, z: 0, w: 0.92874485}
-  m_LocalPosition: {x: 3.26, y: 1.98, z: -0.3}
+  m_LocalRotation: {x: -0.5571192, y: -0.014211312, z: 0.009541404, w: -0.8302561}
+  m_LocalPosition: {x: 4.7198358, y: 9.365873, z: -1.2575932}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

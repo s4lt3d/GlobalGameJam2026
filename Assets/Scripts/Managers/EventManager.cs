@@ -10,6 +10,7 @@ namespace Managers
 
         public Action<Vector2Int> GridChanged;
         public Action<Vector2Int> GridSelected;
+        public Action<Vector3> CellSelected;
 
         public void InitializeService()
         {

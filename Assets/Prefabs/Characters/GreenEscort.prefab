@@ -475,6 +475,7 @@ GameObject:
   m_Component:
   - component: {fileID: 316577725212321401}
   - component: {fileID: 6120278893098349874}
+  - component: {fileID: 304270306839966581}
   m_Layer: 0
   m_Name: GreenEscort
   m_TagString: Untagged
@@ -520,3 +521,33 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &304270306839966581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5481997189055709935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8e9019b00920498b99050ca1e6835de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AIAgent
+  speed: 3.5
+  acceleration: 8
+  angularSpeed: 120
+  stoppingDistance: 0
+  radius: 0.5
+  height: 2
+  baseOffset: 0
+  autoBraking: 1
+  autoRepath: 1
+  updatePosition: 1
+  updateRotation: 1
+  snapDestinationToNavMesh: 1
+  navMeshSampleRadius: 1.5
+  navMeshAreaMask: -1
+  logDestinations: 0
+  drawGizmos: 1
+  gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
+  gizmoRadius: 0.15

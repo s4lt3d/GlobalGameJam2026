@@ -441,6 +441,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6895276022431694333}
   - component: {fileID: 5884697556331679746}
+  - component: {fileID: 4015652848081217982}
   m_Layer: 0
   m_Name: YellowEscort
   m_TagString: Untagged
@@ -486,6 +487,36 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4015652848081217982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7951336801938829681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8e9019b00920498b99050ca1e6835de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AIAgent
+  speed: 3.5
+  acceleration: 8
+  angularSpeed: 120
+  stoppingDistance: 0
+  radius: 0.5
+  height: 2
+  baseOffset: 0
+  autoBraking: 1
+  autoRepath: 1
+  updatePosition: 1
+  updateRotation: 1
+  snapDestinationToNavMesh: 1
+  navMeshSampleRadius: 1.5
+  navMeshAreaMask: -1
+  logDestinations: 0
+  drawGizmos: 1
+  gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
+  gizmoRadius: 0.15
 --- !u!1 &8958973386444653304
 GameObject:
   m_ObjectHideFlags: 0

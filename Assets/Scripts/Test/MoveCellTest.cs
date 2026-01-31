@@ -34,6 +34,4 @@ public class MoveCellTest : MonoBehaviour
         Debug.Log(thirdWorldPosition);
         yield return thirdWorldPosition;
     }
-
-   
 }
