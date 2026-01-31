@@ -8,10 +8,9 @@ namespace Utilities
     public class MouseNearestTaggedSelect : MonoBehaviour
     {
         [SerializeField] private string objectTag = "Untagged";
-        [SerializeField] private float maxDistance = 500f;
-        [SerializeField] private float maxScreenDistance = 1f;
-
-        [SerializeField] private LayerMask raycastMask;
+        [SerializeField] private string groundTag = "Ground";
+        [SerializeField] private float maxRayDistance = 500f;
+        [SerializeField] private float maxDistanceToHit = 3f;
         
         private EventManager eventManager;
 
@@ -33,29 +32,27 @@ namespace Utilities
                 return;
 
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-            var hits = Physics.RaycastAll(ray, maxDistance);
+            if (!Physics.Raycast(ray, out RaycastHit hit, maxRayDistance))
+                return;
+
+            if (hit.collider == null || !hit.collider.CompareTag(groundTag))
+                return;
 
             float bestDistance = float.PositiveInfinity;
             Transform best = null;
 
-            foreach (var hit in hits)
+            var candidates = GameObject.FindGameObjectsWithTag(objectTag);
+            foreach (var go in candidates)
             {
-                if (hit.collider == null || !hit.collider.CompareTag(objectTag))
+                if (go == null)
                     continue;
 
-                var colliders = Physics.OverlapSphere(hit.point, maxScreenDistance, raycastMask);
+                float distance = Vector3.Distance(go.transform.position, hit.point);
+                if (distance > maxDistanceToHit || distance >= bestDistance)
+                    continue;
 
-                
-                foreach (var col in colliders)
-                {
-                    // distance     
-                }
-                
-                if (hit.distance < bestDistance)
-                {
-                    bestDistance = hit.distance;
-                    best = hit.collider.transform;
-                }
+                bestDistance = distance;
+                best = go.transform;
             }
 
             if (best != null)
