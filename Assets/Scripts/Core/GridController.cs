@@ -14,6 +14,10 @@ namespace Core
         private float quadHeight = 0.5f;
 
         [SerializeField]
+        [Min(0f)]
+        private float cellPadding = 0f;
+
+        [SerializeField]
         private GameObject cell;
         
         private int[,] cells;
@@ -35,7 +39,11 @@ namespace Core
 
         private Vector3 GetGridLocationCenter(Vector2Int gridPosition)
         {
-            return new Vector3(gridPosition.x + 0.5f, quadHeight, gridPosition.y + 0.5f);
+            float spacing = 1f + cellPadding;
+            return new Vector3(
+                gridPosition.x * spacing + 0.5f * spacing,
+                quadHeight,
+                gridPosition.y * spacing + 0.5f * spacing);
         }
 
         public bool SpawnInGrid(Vector2Int gridPosition, GameObject cellPrefab)
@@ -43,7 +51,8 @@ namespace Core
             if (!IsInBounds(gridPosition))
                 return false;
 
-            var position = transform.position + new Vector3(gridPosition.x, 0, gridPosition.y);
+            float spacing = 1f + cellPadding;
+            var position = transform.position + new Vector3(gridPosition.x * spacing, 0, gridPosition.y * spacing);
             
             var instance = Instantiate(cellPrefab, position, Quaternion.identity);
             return true;

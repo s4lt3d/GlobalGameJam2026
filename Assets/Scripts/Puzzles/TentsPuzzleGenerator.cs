@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using Core;
 using UnityEngine;
 
 namespace Puzzles
@@ -15,7 +16,16 @@ namespace Puzzles
         public int maxAttempts = 3000;
 
         private System.Random rng;
-
+        
+        [SerializeField]
+        GridController gridController;
+        
+        [SerializeField]
+        List<GameObject> treePrefabs;
+        
+        [SerializeField]
+        List<GameObject> tentPrefabs;
+        
         private void Start()
         {
             rng = (seed >= 0) ? new System.Random(seed) : new System.Random();
@@ -27,6 +37,18 @@ namespace Puzzles
             TestPuzzle testPuzzle = null;
             TentSolution tentSolution = null;
             bool validated = false;
+            
+            if(tentPrefabs.Count < numColors)
+            {
+                Debug.LogError("Not enough tent prefabs for the number of colors specified.");
+                return;
+            }
+            
+             if(treePrefabs.Count < numColors)
+            {
+                Debug.LogError("Not enough tree prefabs for the number of colors specified.");
+                return;
+            }
 
             for (int attempt = 0; attempt < maxAttempts; attempt++)
             {
@@ -51,7 +73,7 @@ namespace Puzzles
                 Debug.LogWarning("Generated layout failed validation.");
             }
 
-            Debug.Log(RenderPuzzle(testPuzzle));
+            SpawnPuzzle(testPuzzle);
             Debug.Log(RenderSolution(testPuzzle, tentSolution));
         }
 
@@ -235,26 +257,38 @@ namespace Puzzles
         // Rendering
         // =======================
 
-        private string RenderPuzzle(TestPuzzle puz)
+        private void SpawnPuzzle(TestPuzzle puz)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("PUZZLE");
+            if (gridController == null)
+            {
+                Debug.LogError("GridController is not assigned.");
+                return;
+            }
 
             for (int r = 0; r < puz.size; r++)
             {
                 for (int c = 0; c < puz.size; c++)
                 {
                     var pos = new Vector2Int(r, c);
-                    string cell = puz.treeColors.TryGetValue(pos, out int color) ? $"T{color}" : "..";
-                    sb.Append(cell);
-                    if (c < puz.size - 1)
-                        sb.Append(' ');
+                    if (!puz.treeColors.TryGetValue(pos, out int color))
+                        continue;
+
+                    if (color < 0 || color >= treePrefabs.Count)
+                    {
+                        Debug.LogWarning($"No tree prefab for color {color} at {pos}.");
+                        continue;
+                    }
+
+                    GameObject treePrefab = treePrefabs[color];
+                    if (treePrefab == null)
+                    {
+                        Debug.LogWarning($"Tree prefab for color {color} is null.");
+                        continue;
+                    }
+
+                    gridController.SpawnInGrid(new Vector2Int(r, c), treePrefab);
                 }
-
-                sb.AppendLine();
             }
-
-            return sb.ToString().TrimEnd();
         }
 
         private string RenderSolution(TestPuzzle puz, TentSolution sol)
