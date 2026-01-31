@@ -385,6 +385,7 @@ GameObject:
   - component: {fileID: 8449432637984096792}
   - component: {fileID: 9206325241772349629}
   - component: {fileID: 7303639661237470288}
+  - component: {fileID: 4040831399514447760}
   m_Layer: 0
   m_Name: RedEscort
   m_TagString: Untagged
@@ -442,24 +443,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e9019b00920498b99050ca1e6835de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIAgent
-  speed: 3.5
-  acceleration: 8
-  angularSpeed: 120
-  stoppingDistance: 0
-  radius: 0.5
-  height: 2
-  baseOffset: 0
-  autoBraking: 1
-  autoRepath: 1
-  updatePosition: 1
-  updateRotation: 1
-  snapDestinationToNavMesh: 1
-  navMeshSampleRadius: 1.5
-  navMeshAreaMask: -1
-  logDestinations: 0
+  destination: {x: 0, y: 0, z: 0}
+  distanceToDestination: 0
   drawGizmos: 1
   gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
   gizmoRadius: 0.15
+--- !u!136 &4040831399514447760
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4367334027110784046}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6663161452784022812
 GameObject:
   m_ObjectHideFlags: 0
