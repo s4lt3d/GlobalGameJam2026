@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Core;
+using Managers;
 using UnityEngine;
 
 namespace Puzzles
@@ -9,12 +10,31 @@ namespace Puzzles
     {
         public const int EmptyCell = -1;
 
+        public enum CellType
+        {
+            Empty,
+            Tree,
+            Tent
+        }
+
+        public struct CellState
+        {
+            public CellType Type;
+            public int Color;
+
+            public CellState(CellType type, int color)
+            {
+                Type = type;
+                Color = color;
+            }
+        }
+
         [SerializeField]
         private GameObject spawnPoint;
 
         [SerializeField]
         private Vector3 spawnSpacing = Vector3.right * 1.5f;
-        
+
         [Header("Config")]
         public int gridSize = 5;
 
@@ -25,24 +45,63 @@ namespace Puzzles
 
         private System.Random rng;
 
-        private int[,] tentState;
+        private CellState[,] tentState;
         private TestPuzzle currentPuzzle;
         private TentSolution currentSolution;
-        
+
         [SerializeField]
         GridController gridController;
-        
+
         [SerializeField]
         List<GameObject> treePrefabs;
-        
+
         [SerializeField]
         List<GameObject> tentPrefabs;
-        
+
+        public GameObject SelectedTotem;
+
+        EventManager eventManager;
+
+
         private void Start()
         {
             rng = (seed >= 0) ? new System.Random(seed) : new System.Random();
+            eventManager = Services.Get<EventManager>();
+            eventManager.gameObjectSelected += OnGameObjectSelected;
+            eventManager.GridSelected += OnGridSelected;
             GenerateAndLog();
         }
+
+        private void OnGridSelected(Vector2Int gridLocation)
+        {
+            if (SelectedTotem != null)
+            {
+                Debug.Log($"Selected totem: {SelectedTotem.name} to move to {gridLocation}");
+                var loc = gridController.GetGridLocation(gridLocation);
+                SelectedTotem.GetComponent<AIAgent>().SetDestination(loc);
+            }
+        }
+
+        private void OnGameObjectSelected(Transform selected)
+        {
+            if (SelectedTotem != null)
+                return;
+            
+            var aiagent = selected.GetComponent<AIAgent>();
+            if (aiagent != null)
+            {
+                if (aiagent.Totem == TotemType.tent)
+                {
+                    SelectedTotem = selected.gameObject;
+                    Debug.Log($"Selected tent: {SelectedTotem.name}");
+                }
+                else
+                {
+                    Debug.Log("Selected object is not a tent totem.");
+                }
+            }
+        }
+        
 
         private void GenerateAndLog()
         {
@@ -52,17 +111,18 @@ namespace Puzzles
 
             if (gridController != null && gridSize != gridController.GridSize)
             {
-                Debug.Log($"TentsPuzzleGenerator gridSize overridden by GridController: {gridSize} -> {gridController.GridSize}");
+                Debug.Log(
+                    $"TentsPuzzleGenerator gridSize overridden by GridController: {gridSize} -> {gridController.GridSize}");
                 gridSize = gridController.GridSize;
             }
-            
-            if(tentPrefabs.Count < numColors)
+
+            if (tentPrefabs.Count < numColors)
             {
                 Debug.LogError("Not enough tent prefabs for the number of colors specified.");
                 return;
             }
 
-             if(treePrefabs.Count < numColors)
+            if (treePrefabs.Count < numColors)
             {
                 Debug.LogError("Not enough tree prefabs for the number of colors specified.");
                 return;
@@ -105,7 +165,7 @@ namespace Puzzles
 
             currentPuzzle = testPuzzle;
             currentSolution = tentSolution;
-            InitializeTentState(gridSize);
+            InitializeTentState(gridSize, testPuzzle);
 
             SpawnPuzzle(testPuzzle);
             StartCoroutine(SpawnTentsAfterDelay(testPuzzle, tentSolution, 2f));
@@ -118,24 +178,27 @@ namespace Puzzles
             return k * k;
         }
 
-        private void InitializeTentState(int size)
+        private void InitializeTentState(int size, TestPuzzle puzzle)
         {
-            tentState = new int[size, size];
+            tentState = new CellState[size, size];
             for (int x = 0; x < size; x++)
             for (int y = 0; y < size; y++)
-                tentState[x, y] = EmptyCell;
+                tentState[x, y] = new CellState(CellType.Empty, EmptyCell);
+
+            if (puzzle == null)
+                return;
+
+            foreach (var kvp in puzzle.treeColors)
+                tentState[kvp.Key.x, kvp.Key.y] = new CellState(CellType.Tree, kvp.Value);
         }
 
-        public int GetCellState(Vector2Int gridPosition)
+        public CellState GetCellState(Vector2Int gridPosition)
         {
             if (!IsInBounds(gridPosition))
-                return EmptyCell;
-
-            if (currentPuzzle != null && currentPuzzle.treeColors.TryGetValue(gridPosition, out int treeColor))
-                return treeColor;
+                return new CellState(CellType.Empty, EmptyCell);
 
             if (tentState == null)
-                return EmptyCell;
+                return new CellState(CellType.Empty, EmptyCell);
 
             return tentState[gridPosition.x, gridPosition.y];
         }
@@ -145,28 +208,34 @@ namespace Puzzles
             if (!IsInBounds(gridPosition))
                 return false;
 
-            if (currentPuzzle != null && currentPuzzle.treeColors.ContainsKey(gridPosition))
-                return false;
-
             if (tentState == null)
                 return true;
 
-            return tentState[gridPosition.x, gridPosition.y] == EmptyCell;
+            return tentState[gridPosition.x, gridPosition.y].Type == CellType.Empty;
         }
 
-        public bool UpdateTentState(Vector2Int gridPosition, int color)
+        public bool UpdateCellState(Vector2Int gridPosition, CellType type, int color)
         {
             if (!IsInBounds(gridPosition))
                 return false;
 
-            if (currentPuzzle != null && currentPuzzle.treeColors.ContainsKey(gridPosition))
+            if (tentState == null)
+                InitializeTentState(gridSize, currentPuzzle);
+
+            var existing = tentState[gridPosition.x, gridPosition.y];
+            if (existing.Type == CellType.Tree && type != CellType.Tree)
                 return false;
 
-            if (tentState == null)
-                InitializeTentState(gridSize);
-
-            tentState[gridPosition.x, gridPosition.y] = color;
+            tentState[gridPosition.x, gridPosition.y] = new CellState(type, color);
             return true;
+        }
+
+        public bool UpdateTentState(Vector2Int gridPosition, int color)
+        {
+            return UpdateCellState(
+                gridPosition,
+                color == EmptyCell ? CellType.Empty : CellType.Tent,
+                color);
         }
 
         public bool IsSolved()
@@ -184,9 +253,9 @@ namespace Puzzles
             for (int x = 0; x < gridSize; x++)
             for (int y = 0; y < gridSize; y++)
             {
-                int color = tentState[x, y];
-                if (color != EmptyCell)
-                    tents[new Vector2Int(x, y)] = color;
+                var state = tentState[x, y];
+                if (state.Type == CellType.Tent && state.Color != EmptyCell)
+                    tents[new Vector2Int(x, y)] = state.Color;
             }
 
             return tents;
@@ -428,10 +497,11 @@ namespace Puzzles
                         continue;
                     }
 
-                    GameObject instance = Instantiate(treePrefab, gridController.GetWorldCenter(pos), Quaternion.identity);
+                    GameObject instance =
+                        Instantiate(treePrefab, gridController.GetWorldCenter(pos), Quaternion.identity);
                     var agent = instance.GetComponent<AIAgent>();
-                    // if (agent != null)
-                    //     agent.SetDestination(gridController.GetWorldCenter(pos));
+                    if (agent != null)
+                        agent.SetDestination(gridController.GetWorldCenter(pos));
                 }
             }
         }
@@ -509,13 +579,12 @@ namespace Puzzles
                     continue;
                 }
 
-                Vector3 targetPos = gridController.GetWorldCenter(gridPos);
-                // agent.SetDestination(targetPos);
                 index++;
             }
         }
 
-        private System.Collections.IEnumerator SpawnTentsAfterDelay(TestPuzzle puz, TentSolution sol, float delaySeconds)
+        private System.Collections.IEnumerator SpawnTentsAfterDelay(TestPuzzle puz, TentSolution sol,
+            float delaySeconds)
         {
             yield return new WaitForSeconds(delaySeconds);
             SpawnTents(puz, sol);

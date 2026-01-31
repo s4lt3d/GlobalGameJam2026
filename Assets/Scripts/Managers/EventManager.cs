@@ -3,7 +3,7 @@ using Core.Interfaces;
 using UnityEngine;
 
 namespace Managers
-{
+{     
     public class EventManager : IService
     {
         public bool IsPaused => false;
@@ -11,7 +11,7 @@ namespace Managers
         public Action<Vector2Int> GridChanged;
         public Action<Vector2Int> GridSelected;
         public Action<Transform> gameObjectSelected;
-        
+        // public Action<GameObject> gameObjectSelected;
         
         public void InitializeService()
         {
