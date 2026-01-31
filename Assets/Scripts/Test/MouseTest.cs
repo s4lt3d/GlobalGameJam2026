@@ -9,6 +9,8 @@ public class MouseTest : MonoBehaviour
 
     [SerializeField]
     private GridController gridController;
+
+    [SerializeField] private GameObject thingToSpawn;
     
     // Update is called once per frame
     void Update()
@@ -28,8 +30,6 @@ public class MouseTest : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            
-            
             foreach (var hit in hits)
             {
                 if (hit.collider != null && hit.collider.CompareTag(groundTag))
@@ -39,6 +39,8 @@ public class MouseTest : MonoBehaviour
                     
                     var isInGrid = gridController.TryGetGridPositionFromWorld(hit.point,  out var gridLocation);
 
+                    if (isInGrid)
+                        gridController.SpawnInGrid(gridLocation, thingToSpawn);
                     Debug.Log(isInGrid ? $"Mouse hit: {gridLocation}" : $"not in grid: {gridLocation}");
                 }
             }
