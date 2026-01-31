@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Puzzles
 {
-    public class TentsPuzzleGenerator : MonoBehaviour
+        public class TentsPuzzleGenerator : MonoBehaviour
     {
         [SerializeField]
         private GameObject spawnPoint;
