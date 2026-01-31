@@ -1,9 +1,10 @@
 using System;
 using Core;
+using Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MouseTest : MonoBehaviour
+public class MouseCellSelect : MonoBehaviour
 {
     [SerializeField] private string groundTag = "Ground";
 
@@ -11,7 +12,14 @@ public class MouseTest : MonoBehaviour
     private GridController gridController;
 
     [SerializeField] private GameObject thingToSpawn;
+
+    private EventManager eventManager;
     
+    private void Start()
+    {
+        eventManager = Services.Get<EventManager>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -40,7 +48,7 @@ public class MouseTest : MonoBehaviour
                     var isInGrid = gridController.TryGetGridPositionFromWorld(hit.point,  out var gridLocation);
 
                     if (isInGrid)
-                        gridController.SpawnInGrid(gridLocation, thingToSpawn);
+                        eventManager.GridSelected?.Invoke(gridLocation);
                     Debug.Log(isInGrid ? $"Mouse hit: {gridLocation}" : $"not in grid: {gridLocation}");
                 }
             }
