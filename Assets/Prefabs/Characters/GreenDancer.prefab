@@ -216,6 +216,7 @@ GameObject:
   - component: {fileID: 2477296184103145026}
   - component: {fileID: 4366120848832492577}
   - component: {fileID: 8717001077418457179}
+  - component: {fileID: -7004392477130821719}
   m_Layer: 0
   m_Name: GreenDancer
   m_TagString: Untagged
@@ -278,6 +279,29 @@ MonoBehaviour:
   drawGizmos: 1
   gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
   gizmoRadius: 0.15
+--- !u!136 &-7004392477130821719
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8073717025901218872}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8671621171779864250
 GameObject:
   m_ObjectHideFlags: 0

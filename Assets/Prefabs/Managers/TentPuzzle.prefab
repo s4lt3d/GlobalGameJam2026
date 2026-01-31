@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.GridController
   gridSize: 5
-  quadHeight: 0.15
+  spawnHeigh: 0.15
   cellPadding: 1
   cell: {fileID: 6465497070964925645}
 --- !u!114 &3463099200561408267
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Puzzles.TentsPuzzleGenerator
   spawnPoint: {fileID: 0}
-  spawnSpacing: {x: 1.5, y: 0, z: 0}
+  spawnSpacing: {x: 2, y: 0, z: 0}
   gridSize: 5
   pairCount: 7
   numColors: 4
