@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core;
 using Managers;
 using UnityEngine;
@@ -13,12 +14,13 @@ public class MouseCellSelect : MonoBehaviour
 
     [SerializeField] private GameObject thingToSpawn;
 
-    private EventManager eventManager;
+    [SerializeField]
+    private float nearestDistanceToCursor;
+
+    [SerializeField]
+    private string objectTag = "MasqueradeFucker";
     
-    private void Start()
-    {
-        eventManager = Services.Get<EventManager>();
-    }
+    private EventManager eventManager;
 
     // Update is called once per frame
     void Update()
@@ -51,6 +53,15 @@ public class MouseCellSelect : MonoBehaviour
                         eventManager.GridSelected?.Invoke(gridLocation);
                     Debug.Log(isInGrid ? $"Mouse hit: {gridLocation}" : $"not in grid: {gridLocation}");
                 }
+                else if (hit.collider != null && hit.collider.CompareTag(objectTag))
+                {
+                    if (gridController == null)
+                        break;
+
+                    var thing = hit.collider.gameObject.transform;
+                    eventManager.gameObjectSelected?.Invoke(thing);
+                }
+                
             }
         }
         

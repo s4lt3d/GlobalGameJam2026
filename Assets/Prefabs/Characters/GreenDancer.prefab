@@ -273,21 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8e9019b00920498b99050ca1e6835de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIAgent
-  speed: 3.5
-  acceleration: 8
-  angularSpeed: 120
-  stoppingDistance: 0
-  radius: 0.5
-  height: 2
-  baseOffset: 0
-  autoBraking: 1
-  autoRepath: 1
-  updatePosition: 1
-  updateRotation: 1
-  snapDestinationToNavMesh: 1
-  navMeshSampleRadius: 1.5
-  navMeshAreaMask: -1
-  logDestinations: 0
+  destination: {x: 0, y: 0, z: 0}
+  distanceToDestination: 0
   drawGizmos: 1
   gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
   gizmoRadius: 0.15
