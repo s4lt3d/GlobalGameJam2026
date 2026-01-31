@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: -2957148744915607706}
   m_Layer: 0
   m_Name: BlueEscort
-  m_TagString: Untagged
+  m_TagString: Totem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

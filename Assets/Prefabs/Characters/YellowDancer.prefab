@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2563866270776440024}
   m_Layer: 0
   m_Name: YellowDancer
-  m_TagString: Untagged
+  m_TagString: Totem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
