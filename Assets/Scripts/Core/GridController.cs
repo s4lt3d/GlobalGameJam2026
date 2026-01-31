@@ -57,6 +57,12 @@ namespace Core
             var instance = Instantiate(cellPrefab, position, Quaternion.identity);
             return true;
         }
+
+        public Vector3 GetWorldPosition(Vector2Int gridPosition)
+        {
+            float spacing = 1f + cellPadding;
+            return transform.position + new Vector3(gridPosition.x * spacing, 0, gridPosition.y * spacing);
+        }
         
         private void OnValidate()
         {

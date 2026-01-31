@@ -2,11 +2,18 @@ using System.Collections.Generic;
 using System.Text;
 using Core;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Puzzles
 {
     public class TentsPuzzleGenerator : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject spawnPoint;
+
+        [SerializeField]
+        private Vector3 spawnSpacing = Vector3.right * 1.5f;
+        
         [Header("Config")]
         public int gridSize = 5;
 
@@ -74,6 +81,7 @@ namespace Puzzles
             }
 
             SpawnPuzzle(testPuzzle);
+            SpawnTents(testPuzzle, tentSolution);
             Debug.Log(RenderSolution(testPuzzle, tentSolution));
         }
 
@@ -317,6 +325,57 @@ namespace Puzzles
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        private void SpawnTents(TestPuzzle puz, TentSolution sol)
+        {
+            if (gridController == null)
+            {
+                Debug.LogError("GridController is not assigned.");
+                return;
+            }
+
+            if (spawnPoint == null)
+            {
+                Debug.LogError("SpawnPoint is not assigned.");
+                return;
+            }
+
+            int index = 0;
+            foreach (var kvp in sol.tents)
+            {
+                var gridPos = kvp.Key;
+                int color = kvp.Value;
+
+                if (color < 0 || color >= tentPrefabs.Count)
+                {
+                    Debug.LogWarning($"No tent prefab for color {color} at {gridPos}.");
+                    continue;
+                }
+
+                GameObject tentPrefab = tentPrefabs[color];
+                if (tentPrefab == null)
+                {
+                    Debug.LogWarning($"Tent prefab for color {color} is null.");
+                    continue;
+                }
+
+                Vector3 spawnOffset = spawnSpacing * index;
+                Vector3 startPos = spawnPoint.transform.position + spawnOffset;
+                var instance = Instantiate(tentPrefab, startPos, Quaternion.identity);
+
+                var agent = instance.GetComponent<NavMeshAgent>();
+                if (agent == null)
+                {
+                    Debug.LogWarning($"Spawned tent at {gridPos} has no NavMeshAgent.");
+                    index++;
+                    continue;
+                }
+
+                Vector3 targetPos = gridController.GetWorldPosition(gridPos);
+                agent.SetDestination(targetPos);
+                index++;
+            }
         }
 
         // =======================
