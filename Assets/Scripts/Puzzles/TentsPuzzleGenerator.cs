@@ -48,6 +48,8 @@ namespace Puzzles
         private CellState[,] tentState;
         private TestPuzzle currentPuzzle;
         private TentSolution currentSolution;
+        private readonly Dictionary<GameObject, int> tentInstanceColors = new Dictionary<GameObject, int>();
+        private readonly Dictionary<GameObject, Vector2Int> tentInstancePositions = new Dictionary<GameObject, Vector2Int>();
 
         [SerializeField]
         GridController gridController;
@@ -79,10 +81,59 @@ namespace Puzzles
             sameFrame = true;
             if (SelectedTotem != null)
             {
+                if (gridController == null)
+                {
+                    Debug.LogError("GridController is not assigned.");
+                    SelectedTotem = null;
+                    return;
+                }
+
+                if (!IsCellFree(gridLocation))
+                {
+                    Debug.Log($"Grid cell {gridLocation} is not free.");
+                    return;
+                }
+
+                if (!TryGetTentColor(SelectedTotem, out int color))
+                {
+                    if (TryGetTentGridPosition(SelectedTotem, out var prevGridFromState))
+                    {
+                        var prevState = GetCellState(prevGridFromState);
+                        if (prevState.Type == CellType.Tent)
+                            color = prevState.Color;
+                    }
+                }
+
+                if (color == EmptyCell)
+                {
+                    Debug.LogWarning($"Selected totem {SelectedTotem.name} has no known color.");
+                    SelectedTotem = null;
+                    return;
+                }
+
+                if (TryGetTentGridPosition(SelectedTotem, out var previousGrid))
+                    UpdateCellState(previousGrid, CellType.Empty, EmptyCell);
+
+                if (!UpdateCellState(gridLocation, CellType.Tent, color))
+                {
+                    Debug.LogWarning($"Failed to update grid state for {gridLocation}.");
+                    SelectedTotem = null;
+                    return;
+                }
+
                 Debug.Log($"Selected totem: {SelectedTotem.name} to move to {gridLocation}");
                 var loc = gridController.GetGridLocation(gridLocation);
-                SelectedTotem.GetComponent<AIAgent>().SetDestination(loc);
+                var agent = SelectedTotem.GetComponent<AIAgent>();
+                if (agent != null)
+                    agent.SetDestination(loc);
+                else
+                    Debug.LogWarning($"Selected totem {SelectedTotem.name} has no AIAgent.");
+
+                tentInstancePositions[SelectedTotem] = gridLocation;
                 SelectedTotem = null;
+
+                if (IsSolved())
+                    Debug.Log("You win");
             }
         }
 
@@ -124,6 +175,39 @@ namespace Puzzles
             if(tentState[gridLocation.x, gridLocation.y].Type == CellType.Empty || tentState[gridLocation.x, gridLocation.y].Type == CellType.Tent)
                 return true;
             return false;
+        }
+
+        public bool IsTentPlacementValid(Vector2Int gridLocation, int tentColor)
+        {
+            if (!IsInBounds(gridLocation))
+                return false;
+
+            if (tentState == null)
+                return false;
+
+            var state = tentState[gridLocation.x, gridLocation.y];
+            if (state.Type != CellType.Empty)
+                return false;
+
+            foreach (var q in KingNeighbors(gridSize, gridLocation))
+            {
+                if (tentState[q.x, q.y].Type == CellType.Tent)
+                    return false;
+            }
+
+            bool hasAdjacentTree = false;
+            foreach (var q in OrthoNeighbors(gridSize, gridLocation))
+            {
+                var neighbor = tentState[q.x, q.y];
+                if (neighbor.Type != CellType.Tree)
+                    continue;
+
+                hasAdjacentTree = true;
+                if (neighbor.Color == tentColor)
+                    return false;
+            }
+
+            return hasAdjacentTree;
         }
         
 
@@ -292,6 +376,28 @@ namespace Puzzles
             if (gridPosition.y < 0 || gridPosition.y >= gridSize)
                 return false;
             return true;
+        }
+
+        private bool TryGetTentColor(GameObject tent, out int color)
+        {
+            if (tentInstanceColors.TryGetValue(tent, out color))
+                return true;
+
+            color = EmptyCell;
+            return false;
+        }
+
+        private bool TryGetTentGridPosition(GameObject tent, out Vector2Int gridPosition)
+        {
+            if (tentInstancePositions.TryGetValue(tent, out gridPosition))
+                return true;
+
+            if (gridController != null &&
+                gridController.TryGetGridPositionFromWorld(tent.transform.position, out gridPosition))
+                return true;
+
+            gridPosition = Vector2Int.zero;
+            return false;
         }
 
         // =======================
@@ -572,6 +678,9 @@ namespace Puzzles
                 return;
             }
 
+            tentInstanceColors.Clear();
+            tentInstancePositions.Clear();
+
             int index = 0;
             foreach (var kvp in sol.tents)
             {
@@ -602,6 +711,8 @@ namespace Puzzles
                     index++;
                     continue;
                 }
+
+                tentInstanceColors[instance] = color;
 
                 index++;
             }
