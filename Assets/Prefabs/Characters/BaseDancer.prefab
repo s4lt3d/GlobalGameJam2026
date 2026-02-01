@@ -4859,6 +4859,7 @@ GameObject:
   - component: {fileID: -4701282722209682393}
   - component: {fileID: 4714435620877213953}
   - component: {fileID: 3013102719905037925}
+  - component: {fileID: 8492148192995448421}
   m_Layer: 0
   m_Name: BaseDancer
   m_TagString: Totem
@@ -4928,6 +4929,21 @@ MonoBehaviour:
   minVelocityForParticles: 0.1
   maxVelocityForParticles: 6
   maxRateOverTime: 40
+  danceOnWin: 1
+  danceJumpHeight: 0.75
+  danceJumpDuration: 0.4
+  danceRotateDuration: 1.2
+  danceTurnsPerDirection: 3
+  randomJumpDuration: 2
+  randomJumpMinInterval: 0.1
+  randomJumpMaxInterval: 0.4
+  randomJumpMinHeight: 0.3
+  randomJumpMaxHeight: 0.9
+  randomJumpMinDuration: 0.2
+  randomJumpMaxDuration: 0.4
+  destinationReachedDistance: 0.1
+  faceCameraDistance: 0.1
+  faceCameraRotationSpeed: 8
 --- !u!136 &-4701282722209682393
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4986,6 +5002,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomizeAnimatorTimeScale
   percentage: 0.01
+--- !u!114 &8492148192995448421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654627811278649236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c129c355140e9b409767a7ab0235c14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransitionDancerAnimation
+  lead: {fileID: 4714435620877213953}
 --- !u!1 &2062917416723275742
 GameObject:
   m_ObjectHideFlags: 0
@@ -5111,7 +5140,6 @@ GameObject:
   - component: {fileID: 3457662799659272151}
   - component: {fileID: 8696408362410187375}
   - component: {fileID: 3471901045742430966}
-  - component: {fileID: 905434857411059099}
   m_Layer: 0
   m_Name: Dancer
   m_TagString: Untagged
@@ -5192,19 +5220,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &905434857411059099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476588643442853608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c129c355140e9b409767a7ab0235c14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TransitionDancerAnimation
-  lead: {fileID: 4714435620877213953}
 --- !u!1 &2894674376624792842
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TileTest
+  m_Name: TransitionBackground
   m_Shader: {fileID: -6465566751694194690, guid: c01ad5a5a9b73408490209ed84f2b619, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -46,9 +46,9 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _BaseColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
-    - _Speed: {r: -0.05, g: -0.05, b: 0, a: 0}
-    - _Tiling: {r: 10, g: 10, b: 0, a: 0}
+    - _BaseColor: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
+    - _Speed: {r: -0.1, g: -0.1, b: 0, a: 0}
+    - _Tiling: {r: 4, g: 3.28, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &812146147173059586
