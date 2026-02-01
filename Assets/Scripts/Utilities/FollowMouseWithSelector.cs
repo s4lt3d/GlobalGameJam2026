@@ -9,6 +9,15 @@ public class FollowMouseWithSelector : MonoBehaviour
     private string groundTag = "Ground";
 
     [SerializeField]
+    private string objectTag = "Totem";
+
+    [SerializeField]
+    private float maxRayDistance = 500f;
+
+    [SerializeField]
+    private float maxDistanceToTagged = 3f;
+
+    [SerializeField]
     private GameObject validSelection;
     
     [SerializeField]
@@ -40,7 +49,7 @@ public class FollowMouseWithSelector : MonoBehaviour
             return;
 
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-        var hits = Physics.RaycastAll(ray, 500f, rayLayerMask);
+        var hits = Physics.RaycastAll(ray, maxRayDistance, rayLayerMask);
         bool handled = false;
 
         if (hits.Length > 0)
@@ -52,22 +61,35 @@ public class FollowMouseWithSelector : MonoBehaviour
 
                 handled = true;
 
+                
+
                 if (gridController == null || generator == null)
                 {
                     SetSelectionState(false, false);
                     break;
                 }
 
-                if (!gridController.TryGetGridPositionFromWorld(hit.point, out var gridLocation))
+                var isInGrid = gridController.TryGetGridPositionFromWorld(hit.point, out var gridLocation);
+                
+                
+                bool isValid = generator.IsValidMovePosition(gridLocation);
+
+                if (isValid)
                 {
-                    SetSelectionState(false, false);
+                    SetSelectionState(isValid, !isValid);
+                    moveToGridPosition(gridLocation);
                     break;
                 }
-
-                bool isValid = generator.IsValidMovePosition(gridLocation);
+                
                 SetSelectionState(isValid, !isValid);
                 moveToGridPosition(gridLocation);
-                break;
+                
+                // if (TryMoveToTagged(hit.point))
+                // {
+                //     SetSelectionState(true, false);
+                //     break;
+                // }
+                
             }
         }
 
@@ -82,6 +104,38 @@ public class FollowMouseWithSelector : MonoBehaviour
         var position = gridController.GetWorldCenter(gridLocation);
         
         transform.position = new Vector3(position.x, transform.position.y, position.z);
+    }
+
+    private bool TryMoveToTagged(Vector3 hitPoint)
+    {
+        if (string.IsNullOrEmpty(objectTag) || maxDistanceToTagged <= 0f)
+            return false;
+
+        Collider[] hits = Physics.OverlapSphere(hitPoint, maxDistanceToTagged);
+        if (hits == null || hits.Length == 0)
+            return false;
+
+        Transform closest = null;
+        float bestDistance = float.PositiveInfinity;
+
+        foreach (var hit in hits)
+        {
+            if (hit == null || !hit.CompareTag(objectTag))
+                continue;
+
+            float distance = Vector3.Distance(hitPoint, hit.transform.position);
+            if (distance >= bestDistance)
+                continue;
+
+            bestDistance = distance;
+            closest = hit.transform;
+        }
+
+        if (closest == null)
+            return false;
+
+        transform.position = new Vector3(closest.position.x, transform.position.y, closest.position.z);
+        return true;
     }
 
     private void SetSelectionState(bool showValid, bool showInvalid)

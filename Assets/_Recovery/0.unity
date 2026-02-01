@@ -1704,6 +1704,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveSelectorToSelection
   groundTag: Ground
+  objectTag: Totem
+  maxRayDistance: 500
+  maxDistanceToTagged: 3
   validSelection: {fileID: 3407718760657711549}
   invalidSelection: {fileID: 770492284}
   generator: {fileID: 5116035451403664507}
