@@ -3891,15 +3891,15 @@ MonoBehaviour:
   maxAttempts: 3000
   gridController: {fileID: 8221296758657375343}
   treePrefabs:
-  - {fileID: 654627811278649236, guid: 91a2e907655f24531a636090fbcec301, type: 3}
-  - {fileID: 8073717025901218872, guid: 9b5efff19df3244c59362568bc2bd6a1, type: 3}
-  - {fileID: 4639537119787668651, guid: ac65d0a687c6546caae6ed37a1995cdf, type: 3}
-  - {fileID: 3041017622226974134, guid: 753db6ac1f3794e8a8832f6e501ad7ae, type: 3}
+  - {fileID: 8940800231137083100, guid: 68797d379abc26e47bf05bdd66718cdf, type: 3}
+  - {fileID: 8940800231137083100, guid: eccc289beddcd1f46bd79273054a45b5, type: 3}
+  - {fileID: 8940800231137083100, guid: 1782ebbfcd9bf3e4aa8df385fd0910c3, type: 3}
+  - {fileID: 8940800231137083100, guid: 05aa685d6dd764243a117e055aa0eae5, type: 3}
   tentPrefabs:
-  - {fileID: 2357719604688893910, guid: bd2969d2e85f249a68b1c75feba23848, type: 3}
-  - {fileID: 5481997189055709935, guid: e7ee6a93135424a1496ff1b44d3d2ac1, type: 3}
-  - {fileID: 4367334027110784046, guid: 4d83c8026333942f29415f189ee74203, type: 3}
-  - {fileID: 7951336801938829681, guid: 2aa5b9ba6283b4b10896e80ebd8f3e3e, type: 3}
+  - {fileID: 4774137235384378053, guid: c62182afbc173134a987436fd783173b, type: 3}
+  - {fileID: 2750586549452226603, guid: b31390a1c06df9d42911462d38298198, type: 3}
+  - {fileID: 7251906940372173455, guid: 589918cad9b73b24bbada595ef71c178, type: 3}
+  - {fileID: 2207523531291584228, guid: b4eb6c6388e98f945ac5ed2543bf1245, type: 3}
   SelectedTotem: {fileID: 0}
 --- !u!114 &8221296758657375343
 MonoBehaviour:
