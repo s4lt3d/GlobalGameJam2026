@@ -45,3 +45,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   sceneName: SampleScene
+  useTransition: 1
+  transitionSceneName: TransistionScene
+  transitionHoldSeconds: 0
+  dissolveInSeconds: 0.5
+  dissolveOutSeconds: 0.5
+  useTransition: 1
+  transitionSceneName: TransistionScene
+  transitionHoldSeconds: 1
+  dissolveInSeconds: 1
+  dissolveOutSeconds: 1
