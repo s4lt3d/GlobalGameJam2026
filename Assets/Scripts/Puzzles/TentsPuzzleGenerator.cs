@@ -342,6 +342,10 @@ namespace Puzzles
                 return false;
 
             tentState[gridPosition.x, gridPosition.y] = new CellState(type, color);
+
+            if (type == CellType.Tent)
+                LogInvalidTentPlacement(gridPosition, color);
+
             return true;
         }
 
@@ -805,6 +809,31 @@ namespace Puzzles
         private IEnumerable<Vector2Int> TentAdjacencyNeighbors(int n, Vector2Int p)
         {
             return allowDiagonalTentTouching ? OrthoNeighbors(n, p) : KingNeighbors(n, p);
+        }
+
+        private void LogInvalidTentPlacement(Vector2Int gridPosition, int tentColor)
+        {
+            bool hasAdjacentTree = false;
+
+            foreach (var q in TentAdjacencyNeighbors(gridSize, gridPosition))
+            {
+                if (tentState[q.x, q.y].Type == CellType.Tent)
+                    Debug.Log($"Invalid: Tent at {gridPosition} touches tent at {q}");
+            }
+
+            foreach (var q in OrthoNeighbors(gridSize, gridPosition))
+            {
+                var neighbor = tentState[q.x, q.y];
+                if (neighbor.Type != CellType.Tree)
+                    continue;
+
+                hasAdjacentTree = true;
+                if (neighbor.Color == tentColor)
+                    Debug.Log($"Invalid: Tent at {gridPosition} matches adjacent tree color at {q}");
+            }
+
+            if (!hasAdjacentTree)
+                Debug.Log($"Invalid: Tent at {gridPosition} has no adjacent tree");
         }
 
         private void TriggerLevelWin()
