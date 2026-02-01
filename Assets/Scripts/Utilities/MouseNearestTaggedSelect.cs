@@ -56,7 +56,7 @@ namespace Utilities
             }
 
             if (best != null)
-                eventManager.GameObjectSelected?.Invoke(best);
+                eventManager.gameObjectSelected?.Invoke(best);
         }
     }
 }

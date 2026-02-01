@@ -3893,7 +3893,6 @@ MonoBehaviour:
   - {fileID: 5481997189055709935, guid: e7ee6a93135424a1496ff1b44d3d2ac1, type: 3}
   - {fileID: 4367334027110784046, guid: 4d83c8026333942f29415f189ee74203, type: 3}
   - {fileID: 7951336801938829681, guid: 2aa5b9ba6283b4b10896e80ebd8f3e3e, type: 3}
-  SelectedTotem: {fileID: 0}
 --- !u!64 &5438465829751406913
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3982,9 +3981,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb70e428277d045dcb8271a2fa688dfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseCellSelect
-  groundTag: Ground
   gridController: {fileID: 8221296758657375343}
-  thingToSpawn: {fileID: 0}
+  objectTag: MasqueradeFucker
+  stickDeadzone: 0.5
+  overlapRadius: 0.4
 --- !u!114 &8611047727358390703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3998,9 +3998,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Utilities.MouseNearestTaggedSelect
   objectTag: Totem
-  groundTag: Ground
-  maxRayDistance: 500
-  maxDistanceToHit: 3
+  maxDistance: 500
+  maxScreenDistance: 1
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

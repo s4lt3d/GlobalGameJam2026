@@ -67,7 +67,7 @@ namespace Puzzles
         {
             rng = (seed >= 0) ? new System.Random(seed) : new System.Random();
             eventManager = Services.Get<EventManager>();
-            eventManager.GameObjectSelected += OnGameObjectSelected;
+            eventManager.gameObjectSelected += OnGameObjectSelected;
             eventManager.GridSelected += OnGridSelected;
             GenerateAndLog();
         }
@@ -105,6 +105,9 @@ namespace Puzzles
 
         public bool IsValidMovePosition(Vector2Int gridLocation)
         {
+            if (!IsInBounds(gridLocation))
+                return false;
+            
             if(tentState[gridLocation.x, gridLocation.y].Type == CellType.Empty || tentState[gridLocation.x, gridLocation.y].Type == CellType.Tree)
                 return true;
             return false;
