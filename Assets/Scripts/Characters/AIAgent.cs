@@ -22,6 +22,10 @@ public class AIAgent : MonoBehaviour
     [SerializeField] private float maxVelocityForParticles = 6f;
     [SerializeField] private float maxRateOverTime = 20f;
 
+    [Header("Idle Facing")]
+    [SerializeField] private float faceCameraDistance = 0.1f;
+    [SerializeField] private float faceCameraRotationSpeed = 8f;
+
     private UnityEngine.AI.NavMeshAgent agent;
     private ParticleSystem.EmissionModule emissionModule;
 
@@ -36,6 +40,7 @@ public class AIAgent : MonoBehaviour
     {
         distanceToDestination = Vector3.Distance(transform.position, destination);
         UpdateVelocityParticles();
+        FaceCameraWhenAtDestination();
     }
 
     public bool SetDestination(Vector3 target)
@@ -91,6 +96,27 @@ public class AIAgent : MonoBehaviour
         rateOverTime.constant = rate;
         emissionModule.rateOverTime = rateOverTime;
         emissionModule.enabled = rate > 0f;
+    }
+
+    private void FaceCameraWhenAtDestination()
+    {
+        if (distanceToDestination > faceCameraDistance)
+            return;
+
+        var cam = Camera.main;
+        if (cam == null)
+            return;
+
+        Vector3 toCamera = cam.transform.position - transform.position;
+        toCamera.y = 0f;
+        if (toCamera.sqrMagnitude < 0.0001f)
+            return;
+
+        Quaternion targetRot = Quaternion.LookRotation(toCamera, Vector3.up);
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRot,
+            faceCameraRotationSpeed * Time.deltaTime);
     }
 }
 
