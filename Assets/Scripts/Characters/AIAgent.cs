@@ -11,6 +11,8 @@ public class AIAgent : MonoBehaviour
 
     [SerializeField]
     private TotemType totemType = TotemType.tent;
+
+    public int TotemColor = 0;
     
     public TotemType Totem => totemType;
 
