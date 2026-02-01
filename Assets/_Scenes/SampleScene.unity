@@ -7243,6 +7243,66 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1001 &339078128
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.11854
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14.74004
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1343567624474426661, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5771759007978957933, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: m_Name
+      value: SceneLoader
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5771759007978957933, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1784189478}
+  m_SourcePrefab: {fileID: 100100000, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
 --- !u!43 &340943028
 Mesh:
   m_ObjectHideFlags: 0
@@ -44033,6 +44093,36 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd6039e53a43df946a3fb436fac43eac, type: 3}
+--- !u!1 &1784189477 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5771759007978957933, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+  m_PrefabInstance: {fileID: 339078128}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1784189478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784189477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3835989f00fa47d89f2ed292aabb8844, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoadNextSceneOnWin
+  sceneLoader: {fileID: 1784189479}
+  delaySeconds: 3
+--- !u!114 &1784189479 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6287222998238897856, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+  m_PrefabInstance: {fileID: 339078128}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784189477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2100497460a94c618040a53e91fbd89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!43 &1790416929
 Mesh:
   m_ObjectHideFlags: 0
@@ -52892,3 +52982,4 @@ SceneRoots:
   - {fileID: 151104653}
   - {fileID: 447124267}
   - {fileID: 1155173925}
+  - {fileID: 339078128}
