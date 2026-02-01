@@ -60,9 +60,7 @@ public class FollowMouseWithSelector : MonoBehaviour
                     continue;
 
                 handled = true;
-
                 
-
                 if (gridController == null || generator == null)
                 {
                     SetSelectionState(false, false);
@@ -83,6 +81,7 @@ public class FollowMouseWithSelector : MonoBehaviour
                 
                 SetSelectionState(false, true);
                 moveToGridPosition(gridLocation);
+                // Debug.Log(gridLocation);
                 
                 // if (TryMoveToTagged(hit.point))
                 // {
@@ -101,7 +100,7 @@ public class FollowMouseWithSelector : MonoBehaviour
 
     private void moveToGridPosition(Vector2Int gridLocation)
     {
-        var position = gridController.GetWorldCenter(gridLocation);
+        var position = gridController.GetWorldPosition(gridLocation, true);
         
         transform.position = new Vector3(position.x, transform.position.y, position.z);
     }

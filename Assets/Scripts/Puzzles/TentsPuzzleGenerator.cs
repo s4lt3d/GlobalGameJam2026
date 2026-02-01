@@ -74,6 +74,9 @@ namespace Puzzles
 
         private void OnGridSelected(Vector2Int gridLocation)
         {
+            if(sameFrame)
+                return;
+            sameFrame = true;
             if (SelectedTotem != null)
             {
                 Debug.Log($"Selected totem: {SelectedTotem.name} to move to {gridLocation}");
@@ -83,8 +86,18 @@ namespace Puzzles
             }
         }
 
+        bool sameFrame = false;
+        
+        void Update()
+        {
+            sameFrame = false;
+        }
+
         private void OnGameObjectSelected(Transform selected)
         {
+            if(sameFrame)
+                return;
+            sameFrame = true;
             if (SelectedTotem != null)
                 return;
             
@@ -407,7 +420,7 @@ namespace Puzzles
 
                 if (matching.Count != 1)
                 {
-                    Debug.Log($"Tree at {treePos} has wrong number of tents");
+                    // Debug.Log($"Tree at {treePos} has wrong number of tents");
                     return false;
                 }
 

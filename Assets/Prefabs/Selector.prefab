@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6894810725889748317}
   - component: {fileID: 4451397870929699191}
+  - component: {fileID: 8405410117167636196}
   m_Layer: 0
   m_Name: Selector
   m_TagString: Untagged
@@ -57,6 +58,22 @@ MonoBehaviour:
   rayLayerMask:
     serializedVersion: 2
     m_Bits: 8
+--- !u!114 &8405410117167636196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668810500588876892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed9839949a8342d79838c83db516ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Utilities.MouseNearestTaggedSelect
+  objectTag: Totem
+  groundTag: Ground
+  maxRayDistance: 500
+  maxDistanceToHit: 3
 --- !u!1 &5804400686550645090
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,10 +85,6 @@ GameObject:
   - component: {fileID: 5420924682160598387}
   - component: {fileID: 5232624857270406541}
   - component: {fileID: 1778741029483151897}
-  - component: {fileID: 8197550881760784776}
-  - component: {fileID: 5556259930950815240}
-  - component: {fileID: 7334579681283625628}
-  - component: {fileID: 926089637994647811}
   m_Layer: 0
   m_Name: InvalidSelection
   m_TagString: Untagged
@@ -151,73 +164,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8197550881760784776
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804400686550645090}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &5556259930950815240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804400686550645090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65545f1c1c6661a4ba2eaa8078d397aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MoveCellToGridSelection
-  gridController: {fileID: 0}
---- !u!114 &7334579681283625628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804400686550645090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb70e428277d045dcb8271a2fa688dfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MouseCellSelect
-  gridController: {fileID: 0}
-  objectTag: MasqueradeFucker
-  stickDeadzone: 0.5
-  overlapRadius: 0.4
---- !u!114 &926089637994647811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5804400686550645090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ed9839949a8342d79838c83db516ba3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Utilities.MouseNearestTaggedSelect
-  objectTag: Totem
-  groundTag: Ground
-  maxRayDistance: 500
-  maxDistanceToHit: 3
 --- !u!1 &6302188598359116885
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,10 +175,6 @@ GameObject:
   - component: {fileID: 4697104011196140605}
   - component: {fileID: 4980348233167661126}
   - component: {fileID: 405234087795540907}
-  - component: {fileID: 6258511592775454823}
-  - component: {fileID: 1017485043228388530}
-  - component: {fileID: 443143383339531396}
-  - component: {fileID: 6073122277644019087}
   m_Layer: 0
   m_Name: ValidSelection
   m_TagString: Untagged
@@ -312,70 +254,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6258511592775454823
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302188598359116885}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1017485043228388530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302188598359116885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65545f1c1c6661a4ba2eaa8078d397aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MoveCellToGridSelection
-  gridController: {fileID: 0}
---- !u!114 &443143383339531396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302188598359116885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb70e428277d045dcb8271a2fa688dfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MouseCellSelect
-  gridController: {fileID: 0}
-  objectTag: MasqueradeFucker
-  stickDeadzone: 0.5
-  overlapRadius: 0.4
---- !u!114 &6073122277644019087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302188598359116885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ed9839949a8342d79838c83db516ba3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Utilities.MouseNearestTaggedSelect
-  objectTag: Totem
-  groundTag: Ground
-  maxRayDistance: 500
-  maxDistanceToHit: 3
