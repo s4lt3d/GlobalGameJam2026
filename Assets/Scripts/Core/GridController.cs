@@ -105,7 +105,7 @@ namespace Core
             return IsInBounds(gridPosition);
         }
 
-        private Vector3 GetWorldPosition(Vector2Int gridPosition, bool center)
+        public Vector3 GetWorldPosition(Vector2Int gridPosition, bool center)
         {
             float spacing = 1f + cellPadding;
             float offset = center ? 0.5f * spacing : 0f;
