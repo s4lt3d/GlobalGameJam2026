@@ -179,7 +179,7 @@ namespace Puzzles
                 return true;
             return false;
         }
-
+        
         public bool IsTentPlacementValid(Vector2Int gridLocation, int tentColor)
         {
             if (!IsInBounds(gridLocation))
@@ -194,6 +194,43 @@ namespace Puzzles
 
             foreach (var q in TentAdjacencyNeighbors(gridSize, gridLocation))
             {
+                if (tentState[q.x, q.y].Type == CellType.Tent)
+                    return false;
+            }
+
+            bool hasAdjacentTree = false;
+            foreach (var q in OrthoNeighbors(gridSize, gridLocation))
+            {
+                var neighbor = tentState[q.x, q.y];
+                if (neighbor.Type != CellType.Tree)
+                    continue;
+
+                hasAdjacentTree = true;
+                if (neighbor.Color == tentColor)
+                    return false;
+            }
+
+            return hasAdjacentTree;
+        }
+
+        public bool IsTentPositionValid(Vector2Int gridLocation, int tentColor)
+        {
+            if (!IsInBounds(gridLocation))
+                return false;
+
+            if (tentState == null)
+                return false;
+
+            var state = tentState[gridLocation.x, gridLocation.y];
+            if (state.Type == CellType.Tree)
+                return false;
+            if (state.Type == CellType.Tent && state.Color != tentColor)
+                return false;
+
+            foreach (var q in TentAdjacencyNeighbors(gridSize, gridLocation))
+            {
+                if (q == gridLocation)
+                    continue;
                 if (tentState[q.x, q.y].Type == CellType.Tent)
                     return false;
             }

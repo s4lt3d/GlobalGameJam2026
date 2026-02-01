@@ -74,6 +74,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenDancerVariant
       objectReference: {fileID: 0}
+    - target: {fileID: 1541424495976826116, guid: 4c42ec3303ec88749b5b64e7775360dd, type: 3}
+      propertyPath: TotemColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2894674376624792842, guid: 4c42ec3303ec88749b5b64e7775360dd, type: 3}
       propertyPath: m_IsActive
       value: 0
