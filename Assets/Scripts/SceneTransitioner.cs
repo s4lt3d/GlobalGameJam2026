@@ -14,6 +14,7 @@ public class SceneTransitioner : MonoBehaviour
     private readonly List<Canvas> disabledCanvases = new(8);
     private Material transitionMaterial;
     private int dissolvePropertyId;
+    private Canvas transitionCanvas;
 
     public static void LoadScene(
         string targetScene,
@@ -105,7 +106,13 @@ public class SceneTransitioner : MonoBehaviour
             if (transition.IsValid() && transition.isLoaded)
                 SceneManager.SetActiveScene(transition);
 
-            DisableNonTransitionCameras(transitionScene);
+            CacheTransitionCanvas(transitionScene);
+
+            var currentCamera = FindSceneCamera(currentScene);
+            var transitionCamera = FindSceneCamera(transition);
+            var activeCamera = currentCamera != null ? currentCamera : transitionCamera;
+            SetTransitionCanvasCamera(activeCamera);
+            DisableOtherCameras(activeCamera);
             DisableNonTransitionCanvases(transitionScene);
 
             hasDissolve = TryPrepareTransitionDissolve(transitionScene);
@@ -115,14 +122,14 @@ public class SceneTransitioner : MonoBehaviour
                 yield return new WaitForSecondsRealtime(dissolveInSeconds);
         }
 
-        float minHold = Mathf.Max(holdSeconds, 1f);
-        if (minHold > 0f)
-            yield return new WaitForSecondsRealtime(minHold);
-
-        yield return null;
-
         if (currentScene.IsValid() && currentScene.isLoaded && currentScene.name != transitionScene)
+        {
+            var transition = SceneManager.GetSceneByName(transitionScene);
+            var transitionCamera = FindSceneCamera(transition);
+            SetTransitionCanvasCamera(transitionCamera);
+            DisableOtherCameras(transitionCamera);
             yield return SceneManager.UnloadSceneAsync(currentScene);
+        }
 
         AsyncOperation loadOp = null;
         if (!SceneManager.GetSceneByName(targetScene).isLoaded)
@@ -132,10 +139,24 @@ public class SceneTransitioner : MonoBehaviour
                 loadOp.allowSceneActivation = false;
         }
 
+        float minHold = Mathf.Max(holdSeconds, 1f);
+        float holdStart = Time.unscaledTime;
+        bool holdComplete = minHold <= 0f;
+
+        while (true)
+        {
+            if (!holdComplete && Time.unscaledTime - holdStart >= minHold)
+                holdComplete = true;
+
+            bool loadReady = loadOp == null || loadOp.progress >= 0.9f;
+            if (holdComplete && loadReady)
+                break;
+
+            yield return null;
+        }
+
         if (loadOp != null)
         {
-            while (loadOp.progress < 0.9f)
-                yield return null;
             loadOp.allowSceneActivation = true;
             yield return loadOp;
         }
@@ -146,7 +167,9 @@ public class SceneTransitioner : MonoBehaviour
 
         if (!string.IsNullOrWhiteSpace(transitionScene))
         {
-            DisableNonTransitionCameras(transitionScene);
+            var targetCamera = FindSceneCamera(target);
+            SetTransitionCanvasCamera(targetCamera);
+            DisableOtherCameras(targetCamera);
             DisableNonTransitionCanvases(transitionScene);
         }
 
@@ -166,24 +189,27 @@ public class SceneTransitioner : MonoBehaviour
         isTransitioning = false;
     }
 
-    private void DisableNonTransitionCameras(string transitionScene)
+    private void DisableOtherCameras(Camera keepCamera)
     {
-        if (string.IsNullOrWhiteSpace(transitionScene))
-            return;
+        if (keepCamera != null)
+        {
+            keepCamera.enabled = true;
+            disabledCameras.Remove(keepCamera);
+        }
 
-        var cameras = Camera.allCameras;
+        var cameras = Object.FindObjectsOfType<Camera>(true);
         for (int i = 0; i < cameras.Length; i++)
         {
             var camera = cameras[i];
             if (camera == null || !camera.enabled)
                 continue;
 
-            var cameraScene = camera.gameObject.scene;
-            if (cameraScene.IsValid() && cameraScene.isLoaded && cameraScene.name == transitionScene)
+            if (keepCamera != null && camera == keepCamera)
                 continue;
 
             camera.enabled = false;
-            disabledCameras.Add(camera);
+            if (!disabledCameras.Contains(camera))
+                disabledCameras.Add(camera);
         }
     }
 
@@ -228,6 +254,91 @@ public class SceneTransitioner : MonoBehaviour
                 canvas.enabled = true;
         }
         disabledCanvases.Clear();
+    }
+
+    private void CacheTransitionCanvas(string transitionScene)
+    {
+        if (transitionCanvas != null)
+        {
+            var scene = transitionCanvas.gameObject.scene;
+            if (scene.IsValid() && scene.isLoaded && scene.name == transitionScene)
+                return;
+        }
+
+        transitionCanvas = null;
+        if (string.IsNullOrWhiteSpace(transitionScene))
+            return;
+
+        var canvases = Object.FindObjectsOfType<Canvas>(true);
+        for (int i = 0; i < canvases.Length; i++)
+        {
+            var canvas = canvases[i];
+            if (canvas == null)
+                continue;
+
+            var canvasScene = canvas.gameObject.scene;
+            if (!canvasScene.IsValid() || !canvasScene.isLoaded || canvasScene.name != transitionScene)
+                continue;
+
+            transitionCanvas = canvas;
+            break;
+        }
+    }
+
+    private void SetTransitionCanvasCamera(Camera camera)
+    {
+        if (transitionCanvas == null || camera == null)
+            return;
+
+        transitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        transitionCanvas.worldCamera = camera;
+    }
+
+    private static Camera FindSceneCamera(Scene scene)
+    {
+        if (!scene.IsValid() || !scene.isLoaded)
+            return null;
+
+        Camera enabledMain = null;
+        Camera enabledAny = null;
+        Camera anyMain = null;
+        Camera any = null;
+
+        var cameras = Object.FindObjectsOfType<Camera>(true);
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            var camera = cameras[i];
+            if (camera == null)
+                continue;
+
+            var cameraScene = camera.gameObject.scene;
+            if (!cameraScene.IsValid() || !cameraScene.isLoaded || cameraScene != scene)
+                continue;
+
+            if (any == null)
+                any = camera;
+
+            bool isMain = camera.CompareTag("MainCamera");
+            if (isMain && anyMain == null)
+                anyMain = camera;
+
+            if (!camera.enabled || !camera.gameObject.activeInHierarchy)
+                continue;
+
+            if (isMain && enabledMain == null)
+                enabledMain = camera;
+
+            if (enabledAny == null)
+                enabledAny = camera;
+        }
+
+        if (enabledMain != null)
+            return enabledMain;
+        if (enabledAny != null)
+            return enabledAny;
+        if (anyMain != null)
+            return anyMain;
+        return any;
     }
 
     private bool TryPrepareTransitionDissolve(string transitionScene)

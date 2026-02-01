@@ -11173,7 +11173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.03524386, g: 0.037828635, b: 0.2264151, a: 0.7882353}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -52697,6 +52697,14 @@ PrefabInstance:
     - target: {fileID: 5771759007978957933, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
       propertyPath: m_Name
       value: SceneLoader
+      objectReference: {fileID: 0}
+    - target: {fileID: 6287222998238897856, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: dissolveInSeconds
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6287222998238897856, guid: 1be4b09532a874af29029bbf55fa086a, type: 3}
+      propertyPath: dissolveOutSeconds
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
