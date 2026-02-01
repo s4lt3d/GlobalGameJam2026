@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6894810725889748317}
   - component: {fileID: 4451397870929699191}
   - component: {fileID: 8405410117167636196}
+  - component: {fileID: -8131670784973748371}
   m_Layer: 0
   m_Name: Selector
   m_TagString: Untagged
@@ -74,6 +75,20 @@ MonoBehaviour:
   groundTag: Ground
   maxRayDistance: 500
   maxDistanceToHit: 3
+--- !u!114 &-8131670784973748371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668810500588876892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec1a1cd0d190cc944b885a846f4a935a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseCellSelect
+  groundTag: Ground
+  gridController: {fileID: 0}
 --- !u!1 &5804400686550645090
 GameObject:
   m_ObjectHideFlags: 0

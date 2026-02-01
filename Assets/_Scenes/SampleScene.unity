@@ -3328,6 +3328,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8131670784973748371, guid: bd6039e53a43df946a3fb436fac43eac, type: 3}
+      propertyPath: gridController
+      value: 
+      objectReference: {fileID: 8221296758657375343}
     - target: {fileID: 4451397870929699191, guid: bd6039e53a43df946a3fb436fac43eac, type: 3}
       propertyPath: generator
       value: 

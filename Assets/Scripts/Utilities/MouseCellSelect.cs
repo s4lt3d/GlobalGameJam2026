@@ -12,7 +12,7 @@ public class MouseCellSelect : MonoBehaviour
     [SerializeField]
     private GridController gridController;
 
-    [SerializeField] private GameObject thingToSpawn;
+    // [SerializeField] private GameObject thingToSpawn;
     
     private EventManager eventManager;
 
