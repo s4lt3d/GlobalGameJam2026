@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: YellowLead
       objectReference: {fileID: 0}
+    - target: {fileID: 692154161486659114, guid: 9631fe2bd1e81924080f0d919705b2ad, type: 3}
+      propertyPath: TotemColor
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 772601063230817853, guid: 9631fe2bd1e81924080f0d919705b2ad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -8,6 +8,7 @@ public class AIAgent : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private Vector3 destination;
     [SerializeField] private float distanceToDestination;
+    public float DistanceToDestination => distanceToDestination;
     [SerializeField] private bool drawGizmos = true;
     [SerializeField] private Color gizmoColor = new Color(0.1f, 0.8f, 1f, 1f);
     [SerializeField] private float gizmoRadius = 0.15f;
@@ -41,7 +42,9 @@ public class AIAgent : MonoBehaviour
 
     [Header("Destination")]
     [SerializeField] private float destinationReachedDistance = 0.1f;
-
+    public float  DestinationReachedDistance => destinationReachedDistance;
+    
+    
     [Header("Idle Facing")]
     [SerializeField] private float faceCameraDistance = 0.1f;
     [SerializeField] private float faceCameraRotationSpeed = 8f;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Core;
 using Puzzles;
@@ -12,7 +13,10 @@ public class TransitionDancerAnimation : MonoBehaviour
 {
     [SerializeField]
     private Animator lead;
-    
+
+    [SerializeField]
+    private float validationIntervalSeconds = 0.25f;
+
     private TentsPuzzleGenerator puzzleGenerator;
 
     private bool unhappy = false;
@@ -28,10 +32,11 @@ public class TransitionDancerAnimation : MonoBehaviour
         puzzleGenerator = FindAnyObjectByType<TentsPuzzleGenerator>();
         eventManager = Services.Get<EventManager>();
         // eventManager.invalidPositions += onInvalidPositions;
-        eventManager.validPosition += onValidPosition;
-        eventManager.invalidPosition += onInvalidPosition;
+        // eventManager.validPosition += onValidPosition;
+        // eventManager.invalidPosition += onInvalidPosition;
         // gridController =
         gridController = FindAnyObjectByType<GridController>();
+        StartCoroutine(IsMyStateValid());
     }
 
     private void Update()
@@ -46,7 +51,54 @@ public class TransitionDancerAnimation : MonoBehaviour
             lead.SetBool("Selected", amISelected);
         }
 
-        CheckIfImInvalid();
+        // CheckIfImInvalid();
+    }
+
+    private IEnumerator IsMyStateValid()
+    {
+        while (true)
+        {
+            if (gridController == null || puzzleGenerator == null || lead == null)
+            {
+                yield return new WaitForSeconds(validationIntervalSeconds);
+                continue;
+            }
+
+            var validGrid = gridController.TryGetGridPositionFromWorld(transform.position, out var gridPosition);
+            if (!validGrid)
+            {
+                lead.SetBool("Unhappy", false);
+                yield return new WaitForSeconds(validationIntervalSeconds);
+                continue;
+            }
+
+            var aiAgent = GetComponent<AIAgent>();
+            if (aiAgent == null)
+            {
+                yield return new WaitForSeconds(validationIntervalSeconds);
+                continue;
+            }
+
+            if (aiAgent.DistanceToDestination > aiAgent.DestinationReachedDistance)
+            {
+                Debug.Log("distance too large");
+                lead.SetBool("Unhappy", false);
+                yield return new WaitForSeconds(validationIntervalSeconds);
+                continue;
+            }
+
+            if (aiAgent.Totem == TotemType.tree)
+            {
+                lead.SetBool("Unhappy", false);
+                yield return new WaitForSeconds(validationIntervalSeconds);
+                continue;
+            }
+            
+            var isValidPosition = puzzleGenerator.IsTentPositionValid(gridPosition, aiAgent.TotemColor);
+            Debug.Log($"isvalidPosition: {isValidPosition}");
+            lead.SetBool("Unhappy", !isValidPosition);
+            yield return new WaitForSeconds(validationIntervalSeconds);
+        }
     }
 
     private void CheckIfImInvalid()
