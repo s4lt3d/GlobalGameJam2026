@@ -76,9 +76,6 @@ namespace Puzzles
 
         private void OnGridSelected(Vector2Int gridLocation)
         {
-            if(sameFrame)
-                return;
-            sameFrame = true;
             if (SelectedTotem != null)
             {
                 if (gridController == null)
@@ -87,6 +84,9 @@ namespace Puzzles
                     SelectedTotem = null;
                     return;
                 }
+                if(sameFrame)
+                    return;
+                sameFrame = true;
 
                 if (!IsCellFree(gridLocation))
                 {

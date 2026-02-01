@@ -50,7 +50,7 @@ public class MouseCellSelect : MonoBehaviour
                     
                     if (isInGrid)
                         eventManager.GridSelected?.Invoke(gridLocation);
-                    Debug.Log(isInGrid ? $"Mouse hit: {gridLocation}" : $"not in grid: {gridLocation}");
+//                    Debug.Log(isInGrid ? $"Mouse hit: {gridLocation}" : $"not in grid: {gridLocation}");
                 }
             }
         }
