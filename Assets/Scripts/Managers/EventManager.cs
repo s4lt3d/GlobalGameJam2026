@@ -11,6 +11,8 @@ namespace Managers
         public Action<Vector2Int> GridChanged;
         public Action<Vector2Int> GridSelected;
         public Action<Transform> gameObjectSelected;
+        public Action LevelWin;
+        public Action<AIAgent> AgentReachedDestination;
         // public Action<GameObject> gameObjectSelected;
         
         public void InitializeService()

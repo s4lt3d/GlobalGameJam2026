@@ -43,6 +43,9 @@ namespace Puzzles
         public int seed = -1; // -1 = random seed
         public int maxAttempts = 30000;
 
+        [Header("Rules")]
+        [SerializeField] private bool allowDiagonalTentTouching = false;
+
         private System.Random rng;
 
         private CellState[,] tentState;
@@ -63,6 +66,7 @@ namespace Puzzles
         public GameObject SelectedTotem;
 
         EventManager eventManager;
+        private bool levelWinTriggered;
         
 
         private void Start()
@@ -71,6 +75,7 @@ namespace Puzzles
             eventManager = Services.Get<EventManager>();
             eventManager.gameObjectSelected += OnGameObjectSelected;
             eventManager.GridSelected += OnGridSelected;
+            eventManager.AgentReachedDestination += OnAgentReachedDestination;
             GenerateAndLog();
         }
 
@@ -132,8 +137,6 @@ namespace Puzzles
                 tentInstancePositions[SelectedTotem] = gridLocation;
                 SelectedTotem = null;
 
-                if (IsSolved())
-                    Debug.Log("You win");
             }
         }
 
@@ -189,7 +192,7 @@ namespace Puzzles
             if (state.Type != CellType.Empty)
                 return false;
 
-            foreach (var q in KingNeighbors(gridSize, gridLocation))
+            foreach (var q in TentAdjacencyNeighbors(gridSize, gridLocation))
             {
                 if (tentState[q.x, q.y].Type == CellType.Tent)
                     return false;
@@ -274,14 +277,18 @@ namespace Puzzles
             currentPuzzle = testPuzzle;
             currentSolution = tentSolution;
             InitializeTentState(gridSize, testPuzzle);
+            levelWinTriggered = false;
 
-            SpawnPuzzle(testPuzzle);
+            SpawnTrees(testPuzzle);
             StartCoroutine(SpawnTentsAfterDelay(testPuzzle, tentSolution, 2f));
             Debug.Log(RenderSolution(testPuzzle, tentSolution));
         }
 
         private int MaxNonTouchingTents(int n)
         {
+            if (allowDiagonalTentTouching)
+                return (n * n + 1) / 2;
+
             int k = (n + 1) / 2;
             return k * k;
         }
@@ -536,7 +543,7 @@ namespace Puzzles
             var tentPositions = new HashSet<Vector2Int>(tents.Keys);
             foreach (var p in tentPositions)
             {
-                foreach (var q in KingNeighbors(n, p))
+                foreach (var q in TentAdjacencyNeighbors(n, p))
                 {
                     if (tentPositions.Contains(q) && q != p)
                     {
@@ -598,7 +605,7 @@ namespace Puzzles
         // Rendering
         // =======================
 
-        private void SpawnPuzzle(TestPuzzle puz)
+        private void SpawnTrees(TestPuzzle puz)
         {
             if (gridController == null)
             {
@@ -606,6 +613,13 @@ namespace Puzzles
                 return;
             }
 
+            if (spawnPoint == null)
+            {
+                Debug.LogError("SpawnPoint is not assigned.");
+                return;
+            }
+
+            int index = 0;
             for (int r = 0; r < puz.size; r++)
             {
                 for (int c = 0; c < puz.size; c++)
@@ -627,11 +641,14 @@ namespace Puzzles
                         continue;
                     }
 
-                    GameObject instance =
-                        Instantiate(treePrefab, gridController.GetWorldCenter(pos), Quaternion.identity);
+                    Vector3 spawnOffset = spawnSpacing * index;
+                    Vector3 startPos = spawnPoint.transform.position + spawnOffset;
+                    GameObject instance = Instantiate(treePrefab, startPos, Quaternion.identity);
                     var agent = instance.GetComponent<AIAgent>();
                     if (agent != null)
                         agent.SetDestination(gridController.GetWorldCenter(pos));
+
+                    index++;
                 }
             }
         }
@@ -725,6 +742,20 @@ namespace Puzzles
             SpawnTents(puz, sol);
         }
 
+        private void OnAgentReachedDestination(AIAgent agent)
+        {
+            if (levelWinTriggered)
+                return;
+
+            if (!IsSolved())
+                return;
+
+            if (!AreAllAgentsAtDestinations())
+                return;
+
+            TriggerLevelWin();
+        }
+
         // =======================
         // Helpers
         // =======================
@@ -771,12 +802,39 @@ namespace Puzzles
             return res;
         }
 
+        private IEnumerable<Vector2Int> TentAdjacencyNeighbors(int n, Vector2Int p)
+        {
+            return allowDiagonalTentTouching ? OrthoNeighbors(n, p) : KingNeighbors(n, p);
+        }
+
+        private void TriggerLevelWin()
+        {
+            levelWinTriggered = true;
+            Debug.Log("You win");
+            eventManager?.LevelWin?.Invoke();
+        }
+
+        private bool AreAllAgentsAtDestinations()
+        {
+            var agents = FindObjectsOfType<AIAgent>();
+            foreach (var agent in agents)
+            {
+                if (agent == null || !agent.isActiveAndEnabled)
+                    continue;
+
+                if (agent.HasDestination() && !agent.HasReachedDestination())
+                    return false;
+            }
+
+            return true;
+        }
+
         private bool TentsConflict(int n, Dictionary<Vector2Int, int> tents, Vector2Int p)
         {
             if (tents.ContainsKey(p))
                 return true;
 
-            foreach (var q in KingNeighbors(n, p))
+            foreach (var q in TentAdjacencyNeighbors(n, p))
             {
                 if (tents.ContainsKey(q))
                     return true;
