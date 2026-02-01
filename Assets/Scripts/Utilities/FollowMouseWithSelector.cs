@@ -81,7 +81,7 @@ public class FollowMouseWithSelector : MonoBehaviour
                 
                 SetSelectionState(false, true);
                 moveToGridPosition(gridLocation);
-                Debug.Log(gridLocation);
+                // Debug.Log(gridLocation);
                 
                 // if (TryMoveToTagged(hit.point))
                 // {
