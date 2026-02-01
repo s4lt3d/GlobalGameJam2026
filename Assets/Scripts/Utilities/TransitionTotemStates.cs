@@ -95,7 +95,7 @@ public class TransitionDancerAnimation : MonoBehaviour
             }
             
             var isValidPosition = puzzleGenerator.IsTentPositionValid(gridPosition, aiAgent.TotemColor);
-            Debug.Log($"isvalidPosition: {isValidPosition}");
+            // Debug.Log($"isvalidPosition: {isValidPosition}");
             lead.SetBool("Unhappy", !isValidPosition);
             yield return new WaitForSeconds(validationIntervalSeconds);
         }
