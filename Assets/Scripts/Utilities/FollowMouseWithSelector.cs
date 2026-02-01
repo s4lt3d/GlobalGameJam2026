@@ -81,7 +81,7 @@ public class FollowMouseWithSelector : MonoBehaviour
                     break;
                 }
                 
-                SetSelectionState(isValid, !isValid);
+                SetSelectionState(false, true);
                 moveToGridPosition(gridLocation);
                 
                 // if (TryMoveToTagged(hit.point))
