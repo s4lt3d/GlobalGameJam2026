@@ -1,13 +1,14 @@
 # Global Game Jam 2026 Game!
 
-![Preview](images/2026-01-30-11-44-43-image.png)
+![Title](images/Title.jpg)
+
+![Gameplay](images/Gameplay.jpg)
 
 
-
-**Title:** [Your Game Title]  
-**Team:** [Team Name]  
+**Title:** Maskuerade
+**Team:** GGJ 2026
 **Jam Site:** Edmonton, AB, Canada 
-**Theme:** [Jam Theme]
+**Theme:** Mask
 
 ## Directory Structure
 
