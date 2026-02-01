@@ -407,7 +407,7 @@ namespace Puzzles
 
                 if (matching.Count != 1)
                 {
-                    Debug.Log($"Tree at {treePos} has wrong number of tents");
+                    // Debug.Log($"Tree at {treePos} has wrong number of tents");
                     return false;
                 }
 
