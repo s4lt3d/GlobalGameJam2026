@@ -121,7 +121,7 @@ namespace Puzzles
             if (!IsInBounds(gridLocation))
                 return false;
             
-            if(tentState[gridLocation.x, gridLocation.y].Type == CellType.Empty || tentState[gridLocation.x, gridLocation.y].Type == CellType.Tree)
+            if(tentState[gridLocation.x, gridLocation.y].Type == CellType.Empty || tentState[gridLocation.x, gridLocation.y].Type == CellType.Tent)
                 return true;
             return false;
         }
