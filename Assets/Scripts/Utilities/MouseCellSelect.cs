@@ -13,7 +13,6 @@ public class MouseCellSelect : MonoBehaviour
     private GridController gridController;
 
     // [SerializeField] private GameObject thingToSpawn;
-    
     private EventManager eventManager;
 
     private void Awake()
@@ -54,13 +53,5 @@ public class MouseCellSelect : MonoBehaviour
                 }
             }
         }
-        
-        // if (Physics.RaycastAll(ray, out RaycastHit hit))
-        // {
-        //     if (hit.collider != null && hit.collider.CompareTag(groundTag))
-        //     {
-        //         Debug.Log($"Mouse hit {groundTag} at {hit.point}");
-        //     }
-        // }
     }
 }

@@ -22,7 +22,9 @@ public class FollowMouseWithSelector : MonoBehaviour
     
     [SerializeField]
     private GameObject invalidSelection;
-
+    
+    [SerializeField] private GameObject circleSelection;
+    
     [SerializeField]
     private TentsPuzzleGenerator generator;
 
@@ -31,6 +33,8 @@ public class FollowMouseWithSelector : MonoBehaviour
     
     [SerializeField]
     private LayerMask rayLayerMask;
+    
+    [SerializeField] private float maxDistanceToHit = 0.5f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -79,6 +83,40 @@ public class FollowMouseWithSelector : MonoBehaviour
                     break;
                 }
                 
+                var position = gridController.GetWorldPosition(gridLocation, true);
+                
+                float bestDistance = float.PositiveInfinity;
+                Transform best = null;
+
+                var candidates = GameObject.FindGameObjectsWithTag(objectTag);
+                foreach (var go in candidates)
+                {
+                    if (go == null)
+                        continue;
+
+                    var component = go.GetComponent<AIAgent>();
+                    if (component == null)
+                        continue;
+
+                    if (component.Totem == TotemType.tree)
+                        continue;
+                    
+                    float distance = Vector3.Distance(go.transform.position, position);
+                    if (distance > maxDistanceToHit || distance >= bestDistance)
+                        continue;
+
+                    bestDistance = distance;
+                    best = go.transform;
+                }
+
+                if (best != null)
+                {
+                    // SetSelectionState(true, false);
+                    SetCircleSelected();
+                    moveToGridPosition(gridLocation);
+                    return;
+                }
+                
                 SetSelectionState(false, true);
                 moveToGridPosition(gridLocation);
                 // Debug.Log(gridLocation);
@@ -105,43 +143,21 @@ public class FollowMouseWithSelector : MonoBehaviour
         transform.position = new Vector3(position.x, transform.position.y, position.z);
     }
 
-    private bool TryMoveToTagged(Vector3 hitPoint)
+    private void SetCircleSelected()
     {
-        if (string.IsNullOrEmpty(objectTag) || maxDistanceToTagged <= 0f)
-            return false;
-
-        Collider[] hits = Physics.OverlapSphere(hitPoint, maxDistanceToTagged);
-        if (hits == null || hits.Length == 0)
-            return false;
-
-        Transform closest = null;
-        float bestDistance = float.PositiveInfinity;
-
-        foreach (var hit in hits)
-        {
-            if (hit == null || !hit.CompareTag(objectTag))
-                continue;
-
-            float distance = Vector3.Distance(hitPoint, hit.transform.position);
-            if (distance >= bestDistance)
-                continue;
-
-            bestDistance = distance;
-            closest = hit.transform;
-        }
-
-        if (closest == null)
-            return false;
-
-        transform.position = new Vector3(closest.position.x, transform.position.y, closest.position.z);
-        return true;
+        // SetSelectionState(false, false);
+        circleSelection.SetActive(true);
+        validSelection.SetActive(false);
+        invalidSelection.SetActive(false);
     }
-
+    
     private void SetSelectionState(bool showValid, bool showInvalid)
     {
         if (validSelection != null)
             validSelection.SetActive(showValid);
         if (invalidSelection != null)
             invalidSelection.SetActive(showInvalid);
+        circleSelection.SetActive(false);
+        
     }
 }
