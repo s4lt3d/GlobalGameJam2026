@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class ControllerMoveSelect : MonoBehaviour, InputSystem_Actions.IPlayerActions
 {
     [SerializeField] private GridController gridController;
-    [SerializeField] private string objectTag = "MasqueradeFucker";
+    [SerializeField] private string objectTag = "MasqueradeThing";
     [SerializeField] private float stickDeadzone = 0.5f;
     [SerializeField] private float overlapRadius = 0.4f;
 
