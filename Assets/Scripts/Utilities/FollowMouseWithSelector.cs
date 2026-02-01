@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 public class FollowMouseWithSelector : MonoBehaviour
 {
-
     [SerializeField]
     private string groundTag = "Ground";
 
