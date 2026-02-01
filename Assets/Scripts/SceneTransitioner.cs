@@ -12,9 +12,11 @@ public class SceneTransitioner : MonoBehaviour
     private bool isTransitioning;
     private readonly List<Camera> disabledCameras = new(8);
     private readonly List<Canvas> disabledCanvases = new(8);
+    private readonly List<GameObject> dissolveVisibilityTargets = new(4);
     private Material transitionMaterial;
     private int dissolvePropertyId;
     private Canvas transitionCanvas;
+    private float currentDissolveValue = -1f;
 
     public static void LoadScene(
         string targetScene,
@@ -114,6 +116,8 @@ public class SceneTransitioner : MonoBehaviour
             SetTransitionCanvasCamera(activeCamera);
             DisableOtherCameras(activeCamera);
             DisableNonTransitionCanvases(transitionScene);
+            CacheDissolveVisibilityTargets(transitionScene);
+            UpdateDissolveVisibility(0f);
 
             hasDissolve = TryPrepareTransitionDissolve(transitionScene);
             if (hasDissolve)
@@ -186,6 +190,7 @@ public class SceneTransitioner : MonoBehaviour
         RestoreCameras();
         RestoreCanvases();
         CleanupTransitionMaterial();
+        ClearDissolveVisibilityTargets();
         isTransitioning = false;
     }
 
@@ -345,6 +350,7 @@ public class SceneTransitioner : MonoBehaviour
     {
         transitionMaterial = null;
         dissolvePropertyId = -1;
+        currentDissolveValue = -1f;
 
         if (string.IsNullOrWhiteSpace(transitionScene))
             return false;
@@ -377,6 +383,7 @@ public class SceneTransitioner : MonoBehaviour
             graphic.material = transitionMaterial;
             dissolvePropertyId = dissolveId;
             transitionMaterial.SetFloat(dissolvePropertyId, 0f);
+            UpdateDissolveVisibility(0f);
             return true;
         }
 
@@ -391,19 +398,24 @@ public class SceneTransitioner : MonoBehaviour
         if (duration <= 0f)
         {
             transitionMaterial.SetFloat(dissolvePropertyId, to);
+            UpdateDissolveVisibility(to);
             yield break;
         }
 
         float elapsed = 0f;
         transitionMaterial.SetFloat(dissolvePropertyId, from);
+        UpdateDissolveVisibility(from);
         while (elapsed < duration)
         {
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            transitionMaterial.SetFloat(dissolvePropertyId, Mathf.Lerp(from, to, t));
+            float value = Mathf.Lerp(from, to, t);
+            transitionMaterial.SetFloat(dissolvePropertyId, value);
+            UpdateDissolveVisibility(value);
             yield return null;
         }
         transitionMaterial.SetFloat(dissolvePropertyId, to);
+        UpdateDissolveVisibility(to);
     }
 
     private void CleanupTransitionMaterial()
@@ -414,5 +426,56 @@ public class SceneTransitioner : MonoBehaviour
         Destroy(transitionMaterial);
         transitionMaterial = null;
         dissolvePropertyId = -1;
+    }
+
+    private void CacheDissolveVisibilityTargets(string transitionScene)
+    {
+        dissolveVisibilityTargets.Clear();
+
+        if (string.IsNullOrWhiteSpace(transitionScene))
+            return;
+
+        var targets = Object.FindObjectsOfType<TransitionDissolveVisibilityTarget>(true);
+        for (int i = 0; i < targets.Length; i++)
+        {
+            var marker = targets[i];
+            if (marker == null)
+                continue;
+
+            var markerScene = marker.gameObject.scene;
+            if (!markerScene.IsValid() || !markerScene.isLoaded || markerScene.name != transitionScene)
+                continue;
+
+            var target = marker.Target != null ? marker.Target : marker.gameObject;
+            if (target == null || dissolveVisibilityTargets.Contains(target))
+                continue;
+
+            dissolveVisibilityTargets.Add(target);
+        }
+    }
+
+    private void ClearDissolveVisibilityTargets()
+    {
+        dissolveVisibilityTargets.Clear();
+        currentDissolveValue = -1f;
+    }
+
+    private void UpdateDissolveVisibility(float value)
+    {
+        currentDissolveValue = value;
+        bool shouldShow = value >= 0.999f;
+
+        for (int i = dissolveVisibilityTargets.Count - 1; i >= 0; i--)
+        {
+            var target = dissolveVisibilityTargets[i];
+            if (target == null)
+            {
+                dissolveVisibilityTargets.RemoveAt(i);
+                continue;
+            }
+
+            if (target.activeSelf != shouldShow)
+                target.SetActive(shouldShow);
+        }
     }
 }
