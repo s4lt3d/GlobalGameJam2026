@@ -43,6 +43,9 @@ namespace Puzzles
         public int seed = -1; // -1 = random seed
         public int maxAttempts = 30000;
 
+        [Header("Rules")]
+        [SerializeField] private bool allowDiagonalTentTouching = false;
+
         private System.Random rng;
 
         private CellState[,] tentState;
@@ -189,7 +192,7 @@ namespace Puzzles
             if (state.Type != CellType.Empty)
                 return false;
 
-            foreach (var q in KingNeighbors(gridSize, gridLocation))
+            foreach (var q in TentAdjacencyNeighbors(gridSize, gridLocation))
             {
                 if (tentState[q.x, q.y].Type == CellType.Tent)
                     return false;
@@ -282,6 +285,9 @@ namespace Puzzles
 
         private int MaxNonTouchingTents(int n)
         {
+            if (allowDiagonalTentTouching)
+                return (n * n + 1) / 2;
+
             int k = (n + 1) / 2;
             return k * k;
         }
@@ -536,7 +542,7 @@ namespace Puzzles
             var tentPositions = new HashSet<Vector2Int>(tents.Keys);
             foreach (var p in tentPositions)
             {
-                foreach (var q in KingNeighbors(n, p))
+                foreach (var q in TentAdjacencyNeighbors(n, p))
                 {
                     if (tentPositions.Contains(q) && q != p)
                     {
@@ -771,12 +777,17 @@ namespace Puzzles
             return res;
         }
 
+        private IEnumerable<Vector2Int> TentAdjacencyNeighbors(int n, Vector2Int p)
+        {
+            return allowDiagonalTentTouching ? OrthoNeighbors(n, p) : KingNeighbors(n, p);
+        }
+
         private bool TentsConflict(int n, Dictionary<Vector2Int, int> tents, Vector2Int p)
         {
             if (tents.ContainsKey(p))
                 return true;
 
-            foreach (var q in KingNeighbors(n, p))
+            foreach (var q in TentAdjacencyNeighbors(n, p))
             {
                 if (tents.ContainsKey(q))
                     return true;

@@ -34,6 +34,7 @@ namespace Core
             AddService(new EventManager());
             AddMonoComponentService<TimeManager>();
             AddMonoComponentService<GameInputManager>();
+            AddPrefabService<MusicManager>("MusicManager", true);
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////

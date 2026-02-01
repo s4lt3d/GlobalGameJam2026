@@ -355,7 +355,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 424.5
+  m_Intensity: 185.2
   m_Range: 11.25
   m_SpotAngle: 77.911835
   m_InnerSpotAngle: 71.686386
@@ -1684,6 +1684,51 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &46848927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 46848929}
+  - component: {fileID: 46848928}
+  m_Layer: 0
+  m_Name: MusicChoice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &46848928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46848927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6fffa7e915c24c5ead601f332897c7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  levelTrack: 1
+--- !u!4 &46848929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46848927}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.34448, y: 1, z: 4.74765}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &55603111
 GameObject:
   m_ObjectHideFlags: 0
@@ -4500,7 +4545,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 424.5
+  m_Intensity: 185.2
   m_Range: 11.25
   m_SpotAngle: 77.911835
   m_InnerSpotAngle: 71.686386
@@ -9211,7 +9256,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 424.5
+  m_Intensity: 140.9
   m_Range: 11.25
   m_SpotAngle: 77.911835
   m_InnerSpotAngle: 71.686386
@@ -30803,8 +30848,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1191376673}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -30908,7 +30953,7 @@ Transform:
   - {fileID: 951898114}
   - {fileID: 527343906}
   - {fileID: 974368404}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1223007776}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1202571900
 GameObject:
@@ -32408,6 +32453,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1941408320}
+  - {fileID: 1191376674}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1223633913
@@ -48940,7 +48986,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 424.5
+  m_Intensity: 140.9
   m_Range: 11.25
   m_SpotAngle: 77.911835
   m_InnerSpotAngle: 71.68639
@@ -52054,6 +52100,7 @@ MonoBehaviour:
   numColors: 4
   seed: -1
   maxAttempts: 3000
+  allowDiagonalTentTouching: 0
   gridController: {fileID: 8221296758657375343}
   treePrefabs:
   - {fileID: 8940800231137083100, guid: 68797d379abc26e47bf05bdd66718cdf, type: 3}
@@ -52121,4 +52168,4 @@ SceneRoots:
   - {fileID: 5640116}
   - {fileID: 1151037581}
   - {fileID: 1958977214}
-  - {fileID: 1191376674}
+  - {fileID: 46848929}
