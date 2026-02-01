@@ -78,12 +78,13 @@ public class TransitionDancerAnimation : MonoBehaviour
     public void onValidPosition(Vector2Int position)
     {
         var validGrid = gridController.TryGetGridPositionFromWorld(transform.position, out var gridPosition);
-
-        if (myOldPosition.Equals(gridPosition))
-            return;
         
-        if (invalidGridPositions.Contains((myOldPosition)))
-            invalidGridPositions.Remove(myOldPosition);
+        if (invalidGridPositions.Contains((position)))
+            invalidGridPositions.Remove(position);
+        // if (myOldPosition.Equals(gridPosition))
+        //     return;
+        
+        
         // invalidGridPositions.Add(position);
     }
     
