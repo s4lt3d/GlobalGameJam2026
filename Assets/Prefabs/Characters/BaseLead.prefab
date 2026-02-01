@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 692154161486659114}
   - component: {fileID: 4237827438273121352}
   - component: {fileID: 8381956613303785647}
+  - component: {fileID: 176713030714547424}
+  - component: {fileID: 6325841923043652577}
   m_Layer: 0
   m_Name: BaseLead
   m_TagString: Totem
@@ -75,6 +77,8 @@ MonoBehaviour:
   drawGizmos: 1
   gizmoColor: {r: 0.1, g: 0.8, b: 1, a: 1}
   gizmoRadius: 0.15
+  totemType: 1
+  TotemColor: 0
 --- !u!136 &4237827438273121352
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -120,6 +124,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &176713030714547424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121876467711680574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e68e4430ced887419e448327cea8902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RandomizeAnimatorTimeScale
+  percentage: 0.01
+--- !u!114 &6325841923043652577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121876467711680574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c129c355140e9b409767a7ab0235c14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransitionDancerAnimation
+  lead: {fileID: 8381956613303785647}
+  parent: {fileID: 121876467711680574}
 --- !u!1 &734966898255802848
 GameObject:
   m_ObjectHideFlags: 0
