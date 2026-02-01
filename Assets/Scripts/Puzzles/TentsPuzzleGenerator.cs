@@ -344,8 +344,9 @@ namespace Puzzles
             tentState[gridPosition.x, gridPosition.y] = new CellState(type, color);
 
             if (type == CellType.Tent)
+            {
                 LogInvalidTentPlacement(gridPosition, color);
-
+            }
             return true;
         }
 
@@ -814,11 +815,20 @@ namespace Puzzles
         private void LogInvalidTentPlacement(Vector2Int gridPosition, int tentColor)
         {
             bool hasAdjacentTree = false;
+            bool invalid = false;
 
+            // bool invalid = false;
+            // List<Vector2Int> invalidPositons = new List<Vector2Int>();
+            // invalidPositons.Add(gridPosition);
+            
             foreach (var q in TentAdjacencyNeighbors(gridSize, gridPosition))
             {
                 if (tentState[q.x, q.y].Type == CellType.Tent)
+                {
                     Debug.Log($"Invalid: Tent at {gridPosition} touches tent at {q}");
+                    // invalidPositons.Add(q);
+                    invalid = true;
+                }
             }
 
             foreach (var q in OrthoNeighbors(gridSize, gridPosition))
@@ -829,11 +839,26 @@ namespace Puzzles
 
                 hasAdjacentTree = true;
                 if (neighbor.Color == tentColor)
+                {
                     Debug.Log($"Invalid: Tent at {gridPosition} matches adjacent tree color at {q}");
+                    // invalidPositons.Add(q);
+                    invalid = true;
+                }
             }
 
             if (!hasAdjacentTree)
+            {
                 Debug.Log($"Invalid: Tent at {gridPosition} has no adjacent tree");
+                invalid = true;
+            }
+            if (invalid)
+                eventManager.invalidPosition?.Invoke(gridPosition);
+            else
+                eventManager.validPosition?.Invoke(gridPosition);
+            // eventManager.invalidPositions?.Invoke(invalidPositons);
+            // foreach( var x in invalidPositons) {
+            //     Debug.Log(x.ToString());
+            // }
         }
 
         private void TriggerLevelWin()

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 692154161486659114}
   - component: {fileID: 4237827438273121352}
   - component: {fileID: 8381956613303785647}
+  - component: {fileID: 2383930322696185845}
   m_Layer: 0
   m_Name: BaseLead
   m_TagString: Totem
@@ -82,6 +83,21 @@ MonoBehaviour:
   minVelocityForParticles: 0.1
   maxVelocityForParticles: 6
   maxRateOverTime: 40
+  danceOnWin: 1
+  danceJumpHeight: 0.75
+  danceJumpDuration: 0.4
+  danceRotateDuration: 1.2
+  danceTurnsPerDirection: 3
+  randomJumpDuration: 2
+  randomJumpMinInterval: 0.1
+  randomJumpMaxInterval: 0.4
+  randomJumpMinHeight: 0.3
+  randomJumpMaxHeight: 0.9
+  randomJumpMinDuration: 0.2
+  randomJumpMaxDuration: 0.4
+  destinationReachedDistance: 0.1
+  faceCameraDistance: 0.1
+  faceCameraRotationSpeed: 8
 --- !u!136 &4237827438273121352
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -127,6 +143,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2383930322696185845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121876467711680574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c129c355140e9b409767a7ab0235c14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransitionDancerAnimation
+  lead: {fileID: 8381956613303785647}
 --- !u!1 &734966898255802848
 GameObject:
   m_ObjectHideFlags: 0
