@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: YellowDancerVariant
       objectReference: {fileID: 0}
+    - target: {fileID: 1541424495976826116, guid: 4c42ec3303ec88749b5b64e7775360dd, type: 3}
+      propertyPath: TotemColor
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3471901045742430966, guid: 4c42ec3303ec88749b5b64e7775360dd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
